@@ -1,0 +1,18 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:61722",
+      "sslPort": 44315
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "APIPreventivas": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "api/supervisores"
+    }
+  }
+}
