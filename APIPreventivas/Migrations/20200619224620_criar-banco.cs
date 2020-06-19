@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APIPreventivas.Migrations
 {
-    public partial class iniciobanco : Migration
+    public partial class criarbanco : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,8 +16,8 @@ namespace APIPreventivas.Migrations
                     Site_3g = table.Column<string>(nullable: true),
                     Site_lte = table.Column<string>(nullable: true),
                     Cidade = table.Column<string>(nullable: true),
-                    Estado = table.Column<int>(nullable: true),
-                    ANF = table.Column<int>(nullable: true)
+                    Estado = table.Column<int>(nullable: false),
+                    ANF = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,8 +34,8 @@ namespace APIPreventivas.Migrations
                     Ultimo_nome = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Senha = table.Column<string>(nullable: true),
-                    Permissao = table.Column<int>(nullable: true),
-                    ANF = table.Column<int>(nullable: true)
+                    Permissao = table.Column<int>(nullable: false),
+                    ANF = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,8 +52,8 @@ namespace APIPreventivas.Migrations
                     Ultimo_nome = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Senha = table.Column<string>(nullable: true),
-                    Permissao = table.Column<int>(nullable: true),
-                    Area = table.Column<int>(nullable: true)
+                    Permissao = table.Column<int>(nullable: false),
+                    Area = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,7 +69,7 @@ namespace APIPreventivas.Migrations
                     Id_supervisor = table.Column<int>(nullable: false),
                     Mes = table.Column<int>(nullable: false),
                     Ano = table.Column<int>(nullable: false),
-                    Status = table.Column<bool>(nullable: true)
+                    Status = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -90,8 +90,8 @@ namespace APIPreventivas.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Id_cronograma = table.Column<int>(nullable: false),
                     Id_supervisor = table.Column<int>(nullable: false),
-                    Site_end_id = table.Column<string>(nullable: false),
-                    Status = table.Column<bool>(nullable: true),
+                    Site_end_id = table.Column<string>(nullable: true),
+                    Status = table.Column<bool>(nullable: false),
                     Data_conclusao = table.Column<DateTime>(nullable: true),
                     Id_tecnico_prog_aterramento = table.Column<int>(nullable: true),
                     Data_tecnico_prog_aterramento = table.Column<DateTime>(nullable: true),

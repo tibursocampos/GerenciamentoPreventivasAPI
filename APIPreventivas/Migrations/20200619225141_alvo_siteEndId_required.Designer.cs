@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIPreventivas.Migrations
 {
     [DbContext(typeof(APIPreventivaContext))]
-    [Migration("20200613204822_popula-db2")]
-    partial class populadb2
+    [Migration("20200619225141_alvo_siteEndId_required")]
+    partial class alvo_siteEndId_required
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,37 +28,37 @@ namespace APIPreventivas.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Data_conclusao")
+                    b.Property<DateTime?>("Data_conclusao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_exec_acesso")
+                    b.Property<DateTime?>("Data_tecnico_exec_acesso")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_exec_aterramento")
+                    b.Property<DateTime?>("Data_tecnico_exec_aterramento")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_exec_bateria")
+                    b.Property<DateTime?>("Data_tecnico_exec_bateria")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_exec_infra")
+                    b.Property<DateTime?>("Data_tecnico_exec_infra")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_exec_mw")
+                    b.Property<DateTime?>("Data_tecnico_exec_mw")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_prog_acesso")
+                    b.Property<DateTime?>("Data_tecnico_prog_acesso")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_prog_aterramento")
+                    b.Property<DateTime?>("Data_tecnico_prog_aterramento")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_prog_bateria")
+                    b.Property<DateTime?>("Data_tecnico_prog_bateria")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_prog_infra")
+                    b.Property<DateTime?>("Data_tecnico_prog_infra")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Data_tecnico_prog_mw")
+                    b.Property<DateTime?>("Data_tecnico_prog_mw")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Id_cronograma")
@@ -67,37 +67,38 @@ namespace APIPreventivas.Migrations
                     b.Property<int>("Id_supervisor")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_exec_acesso")
+                    b.Property<int?>("Id_tecnico_exec_acesso")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_exec_aterramento")
+                    b.Property<int?>("Id_tecnico_exec_aterramento")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_exec_bateria")
+                    b.Property<int?>("Id_tecnico_exec_bateria")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_exec_infra")
+                    b.Property<int?>("Id_tecnico_exec_infra")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_exec_mw")
+                    b.Property<int?>("Id_tecnico_exec_mw")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_prog_acesso")
+                    b.Property<int?>("Id_tecnico_prog_acesso")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_prog_aterramento")
+                    b.Property<int?>("Id_tecnico_prog_aterramento")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_prog_bateria")
+                    b.Property<int?>("Id_tecnico_prog_bateria")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_prog_infra")
+                    b.Property<int?>("Id_tecnico_prog_infra")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_tecnico_prog_mw")
+                    b.Property<int?>("Id_tecnico_prog_mw")
                         .HasColumnType("int");
 
                     b.Property<string>("Site_end_id")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Status")
@@ -251,7 +252,9 @@ namespace APIPreventivas.Migrations
 
                     b.HasOne("APIPreventivas.Models.Site", "Sites")
                         .WithMany("Alvos")
-                        .HasForeignKey("Site_end_id");
+                        .HasForeignKey("Site_end_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("APIPreventivas.Models.Cronograma", b =>

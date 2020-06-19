@@ -9,7 +9,7 @@ namespace APIPreventivas.Models
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=RAPHAEL-DESKTOP;" + "Initial Catalog=APIPreventivas;Integrated Security=True");
+            optionsBuilder.UseSqlServer("Data Source=RAPHAEL-DESKTOP;" + "Initial Catalog=APIPreventivasNew;Integrated Security=True");
         }
 
         public DbSet<Supervisor> Supervisores { get; set; }
@@ -47,6 +47,10 @@ namespace APIPreventivas.Models
 
             modelBuilder.Entity<Alvo>()
                 .HasKey(a => a.Id_alvo);
+
+            modelBuilder.Entity<Alvo>()
+                .Property(a => a.Site_end_id)
+                .IsRequired();
 
             modelBuilder.Entity<Alvo>()
                 .HasOne(c => c.Cronogramas)
