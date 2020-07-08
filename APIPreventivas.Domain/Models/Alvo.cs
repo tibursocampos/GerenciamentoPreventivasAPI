@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace APIPreventivas.Models
 {
@@ -35,5 +36,16 @@ namespace APIPreventivas.Models
         public Cronograma Cronogramas { get; set; }
         public Site Sites { get; set; }
 
-    }
+        public Alvo VerificaStatus(Alvo alvoVerificado)
+        {
+            if ((alvoVerificado.Id_tecnico_exec_aterramento & alvoVerificado.Id_tecnico_exec_bateria & alvoVerificado.Id_tecnico_exec_infra & alvoVerificado.Id_tecnico_exec_acesso & alvoVerificado.Id_tecnico_exec_mw) != null)
+            {
+                alvoVerificado.Status = true;
+            }
+
+            return alvoVerificado;
+        }
+
+    }   
+
 }

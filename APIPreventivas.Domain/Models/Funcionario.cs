@@ -1,8 +1,9 @@
-﻿namespace APIPreventivas.Models
+﻿using static APIPreventivas.Domain.Enum.TipoUsuarioEnum;
+
+namespace APIPreventivas.Models
 {
     public abstract class Funcionario
-    {
-        public enum Tipo_usuario { supervisor = 1, tecnico }
+    {        
         public int Id_funcionario { get; set; }
         public string Primeiro_nome { get; set; }
         public string Ultimo_nome { get; set; }

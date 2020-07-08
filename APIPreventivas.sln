@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIPreventivas", "APIPreventivas\APIPreventivas.csproj", "{833A4073-3AF0-4AC1-9C97-904BE3B82A39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIPreventivas.Domain", "APIPreventivas.Domain\APIPreventivas.Domain.csproj", "{C12FC244-F9A9-4FD5-A7DF-97137E3A1B1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIPreventivas.Domain", "APIPreventivas.Domain\APIPreventivas.Domain.csproj", "{C12FC244-F9A9-4FD5-A7DF-97137E3A1B1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIPreventivas.Persistence", "APIPreventivas.Persistence\APIPreventivas.Persistence.csproj", "{6CBFAFB4-2510-49D6-B239-454AA6DB3C3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIPreventivas.Persistence", "APIPreventivas.Persistence\APIPreventivas.Persistence.csproj", "{6CBFAFB4-2510-49D6-B239-454AA6DB3C3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIPreventivas.Service", "APIPreventivas.Service\APIPreventivas.Service.csproj", "{629CA1EA-43B8-4468-B47D-8752AE0746BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{6CBFAFB4-2510-49D6-B239-454AA6DB3C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CBFAFB4-2510-49D6-B239-454AA6DB3C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CBFAFB4-2510-49D6-B239-454AA6DB3C3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{629CA1EA-43B8-4468-B47D-8752AE0746BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{629CA1EA-43B8-4468-B47D-8752AE0746BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{629CA1EA-43B8-4468-B47D-8752AE0746BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{629CA1EA-43B8-4468-B47D-8752AE0746BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

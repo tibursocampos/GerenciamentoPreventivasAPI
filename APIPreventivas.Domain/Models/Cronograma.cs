@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using static APIPreventivas.Domain.Enum.MesesEnum;
 
 namespace APIPreventivas.Models
 {
     public class Cronograma
-    {
-        public enum Meses { janeiro = 1, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro}
+    {        
         public int Id_cronograma { get; set; }
         public int Id_supervisor { get; set; }
         public Meses Mes { get; set; }

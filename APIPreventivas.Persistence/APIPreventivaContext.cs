@@ -7,6 +7,11 @@ namespace APIPreventivas.Models
         public APIPreventivaContext(DbContextOptions<APIPreventivaContext> options) :base(options)
         {               
         }
+
+        public APIPreventivaContext()
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=RAPHAEL-DESKTOP;" + "Initial Catalog=APIPreventivasNew;Integrated Security=True");

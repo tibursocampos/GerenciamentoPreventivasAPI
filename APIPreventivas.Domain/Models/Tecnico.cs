@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using static APIPreventivas.Domain.Enum.AreaTecnicoEnum;
 
 namespace APIPreventivas.Models
 {
     public class Tecnico : Funcionario
     {
-        public enum Area_tecnico { equipamento = 1, infraestrutura }
-        public Area_tecnico Area { get; set; }
+        
+        public Area_tecnico Area { get; set; } //tipo 1 para equipamento e 2 para infraestrutura
         public ICollection<TecnicoAlvo> Tecnicos_alvos { get; set; }
     }
 }
