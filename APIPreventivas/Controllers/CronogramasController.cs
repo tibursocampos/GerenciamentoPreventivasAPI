@@ -47,7 +47,7 @@ namespace APIPreventivas.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCronograma(int id, Cronograma cronograma)
         {
-            if (id != cronograma.Id_cronograma)
+            if (id != cronograma.IdCronograma)
             {
                 return BadRequest();
             }
@@ -82,7 +82,7 @@ namespace APIPreventivas.Controllers
             _context.Cronogramas.Add(cronograma);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCronograma", new { id = cronograma.Id_cronograma }, cronograma);
+            return CreatedAtAction("GetCronograma", new { id = cronograma.IdCronograma }, cronograma);
         }
 
         // DELETE: api/Cronogramas/5
@@ -103,7 +103,7 @@ namespace APIPreventivas.Controllers
 
         private bool CronogramaExists(int id)
         {
-            return _context.Cronogramas.Any(e => e.Id_cronograma == id);
+            return _context.Cronogramas.Any(e => e.IdCronograma == id);
         }
     }
 }

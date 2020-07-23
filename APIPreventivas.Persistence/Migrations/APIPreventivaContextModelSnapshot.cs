@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace APIPreventivas.Migrations
+namespace APIPreventivas.Persistence.Migrations
 {
     [DbContext(typeof(APIPreventivaContext))]
     partial class APIPreventivaContextModelSnapshot : ModelSnapshot
@@ -15,105 +15,63 @@ namespace APIPreventivas.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("APIPreventivas.Models.Alvo", b =>
+            modelBuilder.Entity("APIPreventivas.Domain.Models.Atividade", b =>
                 {
-                    b.Property<int>("Id_alvo")
+                    b.Property<int>("IdAtividade")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("Data_conclusao")
+                    b.Property<DateTime?>("DataConclusao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Data_tecnico_exec_acesso")
+                    b.Property<DateTime>("DataProgramacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Data_tecnico_exec_aterramento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Data_tecnico_exec_bateria")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Data_tecnico_exec_infra")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Data_tecnico_exec_mw")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Data_tecnico_prog_acesso")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Data_tecnico_prog_aterramento")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Data_tecnico_prog_bateria")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Data_tecnico_prog_infra")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Data_tecnico_prog_mw")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id_cronograma")
+                    b.Property<int>("IdAlvo")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_supervisor")
+                    b.Property<int>("IdTecnico")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Id_tecnico_exec_acesso")
+                    b.Property<int>("TipoAtividade")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Id_tecnico_exec_aterramento")
+                    b.HasKey("IdAtividade");
+
+                    b.HasIndex("IdAlvo");
+
+                    b.HasIndex("IdTecnico");
+
+                    b.ToTable("Atividades");
+                });
+
+            modelBuilder.Entity("APIPreventivas.Models.Alvo", b =>
+                {
+                    b.Property<int>("IdAlvo")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Id_tecnico_exec_bateria")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Id_tecnico_exec_infra")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Id_tecnico_exec_mw")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Id_tecnico_prog_acesso")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Id_tecnico_prog_aterramento")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Id_tecnico_prog_bateria")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Id_tecnico_prog_infra")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Id_tecnico_prog_mw")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Site_end_id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("Status")
+                    b.Property<bool>("Concluido")
                         .HasColumnType("bit");
 
-                    b.HasKey("Id_alvo");
+                    b.Property<DateTime?>("DataConclusao")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("Id_cronograma");
+                    b.Property<int>("IdCronograma")
+                        .HasColumnType("int");
 
-                    b.HasIndex("Site_end_id");
+                    b.HasKey("IdAlvo");
 
                     b.ToTable("Alvos");
                 });
 
             modelBuilder.Entity("APIPreventivas.Models.Cronograma", b =>
                 {
-                    b.Property<int>("Id_cronograma")
+                    b.Property<int>("IdCronograma")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -121,25 +79,31 @@ namespace APIPreventivas.Migrations
                     b.Property<int>("Ano")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_supervisor")
+                    b.Property<bool>("Concluido")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DataConclusao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IdSite")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdSupervisor")
                         .HasColumnType("int");
 
                     b.Property<int>("Mes")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.HasKey("IdCronograma");
 
-                    b.HasKey("Id_cronograma");
-
-                    b.HasIndex("Id_supervisor");
+                    b.HasIndex("IdSupervisor");
 
                     b.ToTable("Cronogramas");
                 });
 
             modelBuilder.Entity("APIPreventivas.Models.Site", b =>
                 {
-                    b.Property<string>("End_id")
+                    b.Property<string>("EndId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ANF")
@@ -151,23 +115,28 @@ namespace APIPreventivas.Migrations
                     b.Property<int>("Estado")
                         .HasColumnType("int");
 
-                    b.Property<string>("Site_3g")
+                    b.Property<int>("IdCronograma")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Site3g")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Site_gsm")
+                    b.Property<string>("SiteGsm")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Site_lte")
+                    b.Property<string>("SiteLte")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("End_id");
+                    b.HasKey("EndId");
+
+                    b.HasIndex("IdCronograma");
 
                     b.ToTable("Sites");
                 });
 
             modelBuilder.Entity("APIPreventivas.Models.Supervisor", b =>
                 {
-                    b.Property<int>("Id_funcionario")
+                    b.Property<int>("IdFuncionario")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -181,23 +150,23 @@ namespace APIPreventivas.Migrations
                     b.Property<int>("Permissao")
                         .HasColumnType("int");
 
-                    b.Property<string>("Primeiro_nome")
+                    b.Property<string>("PrimeiroNome")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Senha")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ultimo_nome")
+                    b.Property<string>("UltimoNome")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id_funcionario");
+                    b.HasKey("IdFuncionario");
 
                     b.ToTable("Supervisores");
                 });
 
             modelBuilder.Entity("APIPreventivas.Models.Tecnico", b =>
                 {
-                    b.Property<int>("Id_funcionario")
+                    b.Property<int>("IdFuncionario")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -211,46 +180,40 @@ namespace APIPreventivas.Migrations
                     b.Property<int>("Permissao")
                         .HasColumnType("int");
 
-                    b.Property<string>("Primeiro_nome")
+                    b.Property<string>("PrimeiroNome")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Senha")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Ultimo_nome")
+                    b.Property<string>("UltimoNome")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id_funcionario");
+                    b.HasKey("IdFuncionario");
 
                     b.ToTable("Tecnicos");
                 });
 
-            modelBuilder.Entity("APIPreventivas.Models.TecnicoAlvo", b =>
+            modelBuilder.Entity("APIPreventivas.Domain.Models.Atividade", b =>
                 {
-                    b.Property<int>("Id_alvo")
-                        .HasColumnType("int");
+                    b.HasOne("APIPreventivas.Models.Alvo", "Alvos")
+                        .WithMany("Atividades")
+                        .HasForeignKey("IdAlvo")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("Id_tecnico")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id_alvo", "Id_tecnico");
-
-                    b.HasIndex("Id_tecnico");
-
-                    b.ToTable("TecnicosAlvos");
+                    b.HasOne("APIPreventivas.Models.Tecnico", "Tecnicos")
+                        .WithMany("Atividades")
+                        .HasForeignKey("IdTecnico")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("APIPreventivas.Models.Alvo", b =>
                 {
                     b.HasOne("APIPreventivas.Models.Cronograma", "Cronogramas")
                         .WithMany("Alvos")
-                        .HasForeignKey("Id_cronograma")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("APIPreventivas.Models.Site", "Sites")
-                        .WithMany("Alvos")
-                        .HasForeignKey("Site_end_id")
+                        .HasForeignKey("IdAlvo")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -259,22 +222,16 @@ namespace APIPreventivas.Migrations
                 {
                     b.HasOne("APIPreventivas.Models.Supervisor", "Supervisores")
                         .WithMany("Cronogramas")
-                        .HasForeignKey("Id_supervisor")
+                        .HasForeignKey("IdSupervisor")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("APIPreventivas.Models.TecnicoAlvo", b =>
+            modelBuilder.Entity("APIPreventivas.Models.Site", b =>
                 {
-                    b.HasOne("APIPreventivas.Models.Alvo", "Alvo")
-                        .WithMany("Tecnicos_alvos")
-                        .HasForeignKey("Id_alvo")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("APIPreventivas.Models.Tecnico", "Tecnico")
-                        .WithMany("Tecnicos_alvos")
-                        .HasForeignKey("Id_tecnico")
+                    b.HasOne("APIPreventivas.Models.Cronograma", "Cronogramas")
+                        .WithMany("Sites")
+                        .HasForeignKey("IdCronograma")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

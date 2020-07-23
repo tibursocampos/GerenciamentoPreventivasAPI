@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace APIPreventivas.Domain.Enum
@@ -8,7 +9,18 @@ namespace APIPreventivas.Domain.Enum
     {
         public enum Meses 
         { 
-            janeiro = 1, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro 
+            [Description("Janeiro")]janeiro = 1,
+            [Description("Fevereiro")] fevereiro,
+            [Description("Marco")] marco,
+            [Description("Abril")] abril,
+            [Description("Maio")] maio,
+            [Description("Junho")] junho,
+            [Description("Julho")] julho,
+            [Description("Agosto")] agosto,
+            [Description("Setembro")] setembro,
+            [Description("Outrubro")] outubro,
+            [Description("Novembro")] novembro,
+            [Description("Dezembro")] dezembro 
         }
     }
 }

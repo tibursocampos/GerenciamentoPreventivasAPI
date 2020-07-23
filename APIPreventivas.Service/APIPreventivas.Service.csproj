@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AlvoService.cs" />
+    <Compile Remove="CronogramaService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\APIPreventivas.Domain\APIPreventivas.Domain.csproj" />
     <ProjectReference Include="..\APIPreventivas.Persistence\APIPreventivas.Persistence.csproj" />
   </ItemGroup>

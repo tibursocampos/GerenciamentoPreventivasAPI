@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace APIPreventivas.Domain.Enum
@@ -8,7 +9,8 @@ namespace APIPreventivas.Domain.Enum
     {
         public enum Area_tecnico 
         { 
-            equipamento = 1, infraestrutura //tipo 1 para equipamento e 2 para infraestrutura
+            [Description("Equipamento")]equipamento = 1,
+            [Description("Infraestrutura")] infraestrutura 
         }
     }
 }

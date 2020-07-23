@@ -5,54 +5,55 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using APIPreventivas.Domain.Models;
 using APIPreventivas.Models;
 
 namespace APIPreventivas.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TecnicosController : ControllerBase
+    public class AtividadesController : ControllerBase
     {
         private readonly APIPreventivaContext _context;
 
-        public TecnicosController(APIPreventivaContext context)
+        public AtividadesController(APIPreventivaContext context)
         {
             _context = context;
         }
 
-        // GET: api/Tecnicos
+        // GET: api/Atividades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tecnico>>> GetTecnicos()
+        public async Task<ActionResult<IEnumerable<Atividade>>> GetAtividades()
         {
-            return await _context.Tecnicos.ToListAsync();
+            return await _context.Atividades.ToListAsync();
         }
 
-        // GET: api/Tecnicos/5
+        // GET: api/Atividades/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tecnico>> GetTecnico(int id)
+        public async Task<ActionResult<Atividade>> GetAtividade(int id)
         {
-            var tecnico = await _context.Tecnicos.FindAsync(id);
+            var atividade = await _context.Atividades.FindAsync(id);
 
-            if (tecnico == null)
+            if (atividade == null)
             {
                 return NotFound();
             }
 
-            return tecnico;
+            return atividade;
         }
 
-        // PUT: api/Tecnicos/5
+        // PUT: api/Atividades/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTecnico(int id, Tecnico tecnico)
+        public async Task<IActionResult> PutAtividade(int id, Atividade atividade)
         {
-            if (id != tecnico.IdFuncionario)
+            if (id != atividade.IdAtividade)
             {
                 return BadRequest();
             }
 
-            _context.Entry(tecnico).State = EntityState.Modified;
+            _context.Entry(atividade).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +61,7 @@ namespace APIPreventivas.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TecnicoExists(id))
+                if (!AtividadeExists(id))
                 {
                     return NotFound();
                 }
@@ -73,37 +74,37 @@ namespace APIPreventivas.Controllers
             return NoContent();
         }
 
-        // POST: api/Tecnicos
+        // POST: api/Atividades
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Tecnico>> PostTecnico(Tecnico tecnico)
+        public async Task<ActionResult<Atividade>> PostAtividade(Atividade atividade)
         {
-            _context.Tecnicos.Add(tecnico);
+            _context.Atividades.Add(atividade);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTecnico", new { id = tecnico.IdFuncionario }, tecnico);
+            return CreatedAtAction("GetAtividade", new { id = atividade.IdAtividade }, atividade);
         }
 
-        // DELETE: api/Tecnicos/5
+        // DELETE: api/Atividades/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Tecnico>> DeleteTecnico(int id)
+        public async Task<ActionResult<Atividade>> DeleteAtividade(int id)
         {
-            var tecnico = await _context.Tecnicos.FindAsync(id);
-            if (tecnico == null)
+            var atividade = await _context.Atividades.FindAsync(id);
+            if (atividade == null)
             {
                 return NotFound();
             }
 
-            _context.Tecnicos.Remove(tecnico);
+            _context.Atividades.Remove(atividade);
             await _context.SaveChangesAsync();
 
-            return tecnico;
+            return atividade;
         }
 
-        private bool TecnicoExists(int id)
+        private bool AtividadeExists(int id)
         {
-            return _context.Tecnicos.Any(e => e.IdFuncionario == id);
+            return _context.Atividades.Any(e => e.IdAtividade == id);
         }
     }
 }

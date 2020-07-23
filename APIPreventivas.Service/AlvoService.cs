@@ -95,13 +95,20 @@ namespace APIPreventivas.Service
         public void ProgamacaoDiaria (Cronograma cronogramaAtual)
         {
             var programadosHoje = AlvosProgramadosHoje(cronogramaAtual);
+            Dictionary<string, string> atividade = new Dictionary<string, string>();
+            atividade.Add("tec01", "Aterramento");
+            atividade.Add("tec02", "Bateria");
+            atividade.Add("tec02", "Infra");
+            atividade.Add("tec04", "Acesso");
+            atividade.Add("tec05", "MW");
+
             //IQueryable<Alvo> programacaoTecnicos;
             //foreach (IQueryable<Alvo> programacao in programadosHoje)
 
             //programacaoTecnicos = (IQueryable<Alvo>)from alvosDoDia in db.Alvos
             //                          join tecnico in db.Tecnicos on alvosDoDia.Id_tecnico_prog_aterramento equals tecnico.Id_funcionario
             //                          select new { nome = tecnico.Primeiro_nome, alvo = alvosDoDia.Site_end_id, atividade = "Aterramento" };
-            var filtroNomes = (List<Alvo>)(from alvosDoDia in programadosHoje
+            var programacaoTecnicos = (List<Alvo>)(from alvosDoDia in programadosHoje
                                           join tecnico in db.Tecnicos
                                           on new
                                           {
@@ -119,7 +126,12 @@ namespace APIPreventivas.Service
                                               tec04 = tecnico.Id_funcionario,
                                               tec05 = tecnico.Id_funcionario
                                           }
-                                          select new { nome = tecnico.Primeiro_nome, alvo = alvosDoDia.Site_end_id, atividade = ""});                                                   
+                                          select new 
+                                          { 
+                                              nome = tecnico.Primeiro_nome, 
+                                              alvo = alvosDoDia.Site_end_id, 
+                                              atividade = atividade["tec01"]
+                                          });                                                   
                                                    
 
 

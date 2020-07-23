@@ -47,7 +47,7 @@ namespace APIPreventivas.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAlvo(int id, Alvo alvo)
         {
-            if (id != alvo.Id_alvo)
+            if (id != alvo.IdAlvo)
             {
                 return BadRequest();
             }
@@ -80,9 +80,23 @@ namespace APIPreventivas.Controllers
         public async Task<ActionResult<Alvo>> PostAlvo(Alvo alvo)
         {
             _context.Alvos.Add(alvo);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (AlvoExists(alvo.IdAlvo))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-            return CreatedAtAction("GetAlvo", new { id = alvo.Id_alvo }, alvo);
+            return CreatedAtAction("GetAlvo", new { id = alvo.IdAlvo }, alvo);
         }
 
         // DELETE: api/Alvos/5
@@ -103,7 +117,7 @@ namespace APIPreventivas.Controllers
 
         private bool AlvoExists(int id)
         {
-            return _context.Alvos.Any(e => e.Id_alvo == id);
+            return _context.Alvos.Any(e => e.IdAlvo == id);
         }
     }
 }

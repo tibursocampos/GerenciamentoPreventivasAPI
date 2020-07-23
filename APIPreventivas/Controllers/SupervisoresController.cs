@@ -47,7 +47,7 @@ namespace APIPreventivas.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSupervisor(int id, Supervisor supervisor)
         {
-            if (id != supervisor.Id_funcionario)
+            if (id != supervisor.IdFuncionario)
             {
                 return BadRequest();
             }
@@ -82,7 +82,7 @@ namespace APIPreventivas.Controllers
             _context.Supervisores.Add(supervisor);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSupervisor", new { id = supervisor.Id_funcionario }, supervisor);
+            return CreatedAtAction("GetSupervisor", new { id = supervisor.IdFuncionario }, supervisor);
         }
 
         // DELETE: api/Supervisores/5
@@ -103,7 +103,7 @@ namespace APIPreventivas.Controllers
 
         private bool SupervisorExists(int id)
         {
-            return _context.Supervisores.Any(e => e.Id_funcionario == id);
+            return _context.Supervisores.Any(e => e.IdFuncionario == id);
         }
     }
 }

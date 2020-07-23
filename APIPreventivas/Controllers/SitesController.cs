@@ -47,7 +47,7 @@ namespace APIPreventivas.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSite(string id, Site site)
         {
-            if (id != site.End_id)
+            if (id != site.EndId)
             {
                 return BadRequest();
             }
@@ -86,7 +86,7 @@ namespace APIPreventivas.Controllers
             }
             catch (DbUpdateException)
             {
-                if (SiteExists(site.End_id))
+                if (SiteExists(site.EndId))
                 {
                     return Conflict();
                 }
@@ -96,7 +96,7 @@ namespace APIPreventivas.Controllers
                 }
             }
 
-            return CreatedAtAction("GetSite", new { id = site.End_id }, site);
+            return CreatedAtAction("GetSite", new { id = site.EndId }, site);
         }
 
         // DELETE: api/Sites/5
@@ -117,7 +117,7 @@ namespace APIPreventivas.Controllers
 
         private bool SiteExists(string id)
         {
-            return _context.Sites.Any(e => e.End_id == id);
+            return _context.Sites.Any(e => e.EndId == id);
         }
     }
 }

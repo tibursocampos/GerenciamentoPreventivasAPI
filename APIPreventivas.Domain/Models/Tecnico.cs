@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using APIPreventivas.Domain.Models;
+using System.Collections.Generic;
 using static APIPreventivas.Domain.Enum.AreaTecnicoEnum;
 
 namespace APIPreventivas.Models
@@ -7,6 +8,6 @@ namespace APIPreventivas.Models
     {
         
         public Area_tecnico Area { get; set; } //tipo 1 para equipamento e 2 para infraestrutura
-        public ICollection<TecnicoAlvo> Tecnicos_alvos { get; set; }
+        public ICollection<Atividade> Atividades { get; set; }
     }
 }

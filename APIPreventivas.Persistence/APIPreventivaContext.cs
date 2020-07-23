@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using APIPreventivas.Domain.Enum;
+using APIPreventivas.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
 
 namespace APIPreventivas.Models
 {
@@ -14,66 +18,68 @@ namespace APIPreventivas.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=RAPHAEL-DESKTOP;" + "Initial Catalog=APIPreventivasNew;Integrated Security=True");
+            optionsBuilder.UseSqlServer("Data Source=RAPHAEL-DESKTOP;" + "Initial Catalog=APIPreventivasNovaModel;Integrated Security=True");
         }
 
         public DbSet<Supervisor> Supervisores { get; set; }
         public DbSet<Tecnico> Tecnicos { get; set; }
-        public DbSet<TecnicoAlvo> TecnicosAlvos { get; set; }
-        public DbSet<Alvo> Alvos { get; set; }
         public DbSet<Cronograma> Cronogramas { get; set; }
         public DbSet<Site> Sites { get; set; }
-
+        public DbSet<Alvo> Alvos { get; set; }
+        public DbSet<Atividade> Atividades { get; set; }
+        
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Supervisor>()
-                .HasKey(s => s.Id_funcionario);
+                .HasKey(s => s.IdFuncionario);
+
+            modelBuilder.Entity<Tecnico>()
+                .HasKey(t => t.IdFuncionario);           
+
+            modelBuilder.Entity<Cronograma>()
+                .HasKey(c => c.IdCronograma);
 
             modelBuilder.Entity<Cronograma>()
                 .HasOne(s => s.Supervisores)
                 .WithMany(c => c.Cronogramas)
-                .HasForeignKey(s => s.Id_supervisor);
-
-            modelBuilder.Entity<Tecnico>()
-                .HasKey(t => t.Id_funcionario);
-
-            modelBuilder.Entity<TecnicoAlvo>()
-                .HasKey(ta => new { ta.Id_alvo, ta.Id_tecnico });
-
-            modelBuilder.Entity<TecnicoAlvo>()
-                .HasOne(a => a.Alvo)
-                .WithMany(ta => ta.Tecnicos_alvos)
-                .HasForeignKey(a => a.Id_alvo);
-
-            modelBuilder.Entity<TecnicoAlvo>()
-                .HasOne(t => t.Tecnico)
-                .WithMany(ta => ta.Tecnicos_alvos)
-                .HasForeignKey(t => t.Id_tecnico);
-
-            modelBuilder.Entity<Alvo>()
-                .HasKey(a => a.Id_alvo);
-
-            modelBuilder.Entity<Alvo>()
-                .Property(a => a.Site_end_id)
-                .IsRequired();
-
-            modelBuilder.Entity<Alvo>()
-                .HasOne(c => c.Cronogramas)
-                .WithMany(a => a.Alvos)
-                .HasForeignKey(c => c.Id_cronograma);
-
-            modelBuilder.Entity<Site>()
-                .HasKey(s => s.End_id);
-
-            modelBuilder.Entity<Alvo>()
-                .HasOne(s => s.Sites)
-                .WithMany(a => a.Alvos)
-                .HasForeignKey(s => s.Site_end_id);
+                .HasForeignKey(c => c.IdSupervisor);
 
             modelBuilder.Entity<Cronograma>()
-                .HasKey(c => c.Id_cronograma);
+                .HasMany(a => a.Alvos)
+                .WithOne(c => c.Cronogramas)
+                .HasForeignKey(a => a.IdAlvo);
+
+            modelBuilder.Entity<Site>()
+                .HasKey(s => s.EndId);
+
+            modelBuilder.Entity<Site>()
+                .HasOne(c => c.Cronogramas)
+                .WithMany(s => s.Sites)
+                .HasForeignKey(s => s.IdCronograma);
+
+            modelBuilder.Entity<Alvo>()
+                .HasKey(a => a.IdAlvo);
+
+            modelBuilder.Entity<Atividade>()
+                .HasKey(a => a.IdAtividade);
+
+            modelBuilder.Entity<Atividade>()
+                .HasOne(a => a.Alvos)
+                .WithMany(b => b.Atividades)
+                .HasForeignKey(b => b.IdAlvo);
+
+            modelBuilder.Entity<Atividade>()
+                .HasOne(t => t.Tecnicos)
+                .WithMany(a => a.Atividades)
+                .HasForeignKey(a => a.IdTecnico);
                 
-                
+            //modelBuilder.Entity<Atividade>()
+            //    .Property(a => a.TipoAtividade)
+            //    .HasConversion(
+            //    to => to.ToString(),
+            //    from => (TipoAtividadeEnum)Enum.Parse(typeof(TipoAtividadeEnum), from));
+
         }
     }
 }
