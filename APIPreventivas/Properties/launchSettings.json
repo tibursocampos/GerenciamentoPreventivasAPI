@@ -12,7 +12,7 @@
     "APIPreventivas": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/supervisores"
+      "launchUrl": "api/"
     }
   }
 }

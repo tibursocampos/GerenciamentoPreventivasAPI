@@ -1,38 +1,35 @@
-﻿using APIPreventivas.Models;
+﻿using APIPreventivas.Domain.Enum;
+using APIPreventivas.Models;
+using System.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using static APIPreventivas.Domain.Enum.MesesEnum;
 
 namespace APIPreventivas.Service
 {
     public class CronogramaService
     {
-        private readonly APIPreventivaContext db = new APIPreventivaContext();
-        public IQueryable<Alvo> AlvosDoCronograma (Cronograma cronogramaVerificado)
-        {            
-            var alvosSelecionados = db.Alvos.Where(a => a.Id_cronograma == cronogramaVerificado.Id_cronograma);
-            return alvosSelecionados;
-        }
-        public Cronograma AtualizaStatusCronograma (Cronograma cronogramaVerificado)
+        static private readonly APIPreventivaContext db = new APIPreventivaContext();
+        
+        //Retorna o ID do Cronograma passando um Enum para o mes e Int para ano
+        static public int RetornaIdCronograma (Meses mes, int ano)
         {
-            IQueryable<Alvo> alvosSelecionados = AlvosDoCronograma(cronogramaVerificado);
-            int campoVazio = 0;            
-            foreach (var selecionados in alvosSelecionados)
+            var idCronogramaBusca = from cronograma in db.Cronogramas
+                               where cronograma.Mes == mes && cronograma.Ano == ano
+                               select cronograma.IdCronograma;
 
-            { 
-                if (selecionados.Status == false)
-                {
-                    campoVazio++;
-                }
-            }
+            return idCronogramaBusca.First();
+        }
 
-            if (campoVazio == 0)
-            {
-                cronogramaVerificado.Status = true;
-            }
+        //Retorna o ID do Cronograma passando um objeto Cronograma
+        static public int RetornaIdCronograma(Cronograma cronograma)
+        {
+            var idCronogramaBusca = from cronog in db.Cronogramas
+                               where cronog.IdCronograma == cronograma.IdCronograma
+                               select cronog.IdCronograma;
 
-            return cronogramaVerificado;
+            return idCronogramaBusca.First();
         }
     }
 }

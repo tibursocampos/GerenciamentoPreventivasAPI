@@ -3,16 +3,34 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APIPreventivas.Persistence.Migrations
 {
-    public partial class nova_estrutura_model : Migration
+    public partial class relacionamentos : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Sites",
+                columns: table => new
+                {
+                    EndId = table.Column<string>(nullable: false),
+                    SiteGsm = table.Column<string>(nullable: true),
+                    Site3g = table.Column<string>(nullable: true),
+                    SiteLte = table.Column<string>(nullable: true),
+                    Cidade = table.Column<string>(nullable: true),
+                    Estado = table.Column<int>(nullable: false),
+                    ANF = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sites", x => x.EndId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Supervisores",
                 columns: table => new
                 {
                     IdFuncionario = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CPF = table.Column<int>(nullable: false),
                     PrimeiroNome = table.Column<string>(nullable: true),
                     UltimoNome = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
@@ -31,6 +49,7 @@ namespace APIPreventivas.Persistence.Migrations
                 {
                     IdFuncionario = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CPF = table.Column<int>(nullable: false),
                     PrimeiroNome = table.Column<string>(nullable: true),
                     UltimoNome = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
@@ -52,7 +71,6 @@ namespace APIPreventivas.Persistence.Migrations
                     IdSupervisor = table.Column<int>(nullable: false),
                     Mes = table.Column<int>(nullable: false),
                     Ano = table.Column<int>(nullable: false),
-                    IdSite = table.Column<string>(nullable: true),
                     Concluido = table.Column<bool>(nullable: false),
                     DataConclusao = table.Column<DateTime>(nullable: true)
                 },
@@ -71,8 +89,10 @@ namespace APIPreventivas.Persistence.Migrations
                 name: "Alvos",
                 columns: table => new
                 {
-                    IdAlvo = table.Column<int>(nullable: false),
+                    IdAlvo = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     IdCronograma = table.Column<int>(nullable: false),
+                    IdSite = table.Column<string>(nullable: true),
                     Concluido = table.Column<bool>(nullable: false),
                     DataConclusao = table.Column<DateTime>(nullable: true)
                 },
@@ -80,35 +100,17 @@ namespace APIPreventivas.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Alvos", x => x.IdAlvo);
                     table.ForeignKey(
-                        name: "FK_Alvos_Cronogramas_IdAlvo",
-                        column: x => x.IdAlvo,
-                        principalTable: "Cronogramas",
-                        principalColumn: "IdCronograma",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sites",
-                columns: table => new
-                {
-                    EndId = table.Column<string>(nullable: false),
-                    SiteGsm = table.Column<string>(nullable: true),
-                    Site3g = table.Column<string>(nullable: true),
-                    SiteLte = table.Column<string>(nullable: true),
-                    Cidade = table.Column<string>(nullable: true),
-                    Estado = table.Column<int>(nullable: false),
-                    ANF = table.Column<int>(nullable: false),
-                    IdCronograma = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sites", x => x.EndId);
-                    table.ForeignKey(
-                        name: "FK_Sites_Cronogramas_IdCronograma",
+                        name: "FK_Alvos_Cronogramas_IdCronograma",
                         column: x => x.IdCronograma,
                         principalTable: "Cronogramas",
                         principalColumn: "IdCronograma",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Alvos_Sites_IdSite",
+                        column: x => x.IdSite,
+                        principalTable: "Sites",
+                        principalColumn: "EndId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -141,6 +143,18 @@ namespace APIPreventivas.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Alvos_IdCronograma",
+                table: "Alvos",
+                column: "IdCronograma");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Alvos_IdSite",
+                table: "Alvos",
+                column: "IdSite",
+                unique: true,
+                filter: "[IdSite] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Atividades_IdAlvo",
                 table: "Atividades",
                 column: "IdAlvo");
@@ -154,20 +168,12 @@ namespace APIPreventivas.Persistence.Migrations
                 name: "IX_Cronogramas_IdSupervisor",
                 table: "Cronogramas",
                 column: "IdSupervisor");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sites_IdCronograma",
-                table: "Sites",
-                column: "IdCronograma");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Atividades");
-
-            migrationBuilder.DropTable(
-                name: "Sites");
 
             migrationBuilder.DropTable(
                 name: "Alvos");
@@ -177,6 +183,9 @@ namespace APIPreventivas.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cronogramas");
+
+            migrationBuilder.DropTable(
+                name: "Sites");
 
             migrationBuilder.DropTable(
                 name: "Supervisores");

@@ -47,7 +47,7 @@ namespace APIPreventivas.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAlvo(int id, Alvo alvo)
         {
-            if (id != alvo.IdAlvo)
+            if (id != alvo.IdAlvo)  
             {
                 return BadRequest();
             }

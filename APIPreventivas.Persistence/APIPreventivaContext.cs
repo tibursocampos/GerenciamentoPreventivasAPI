@@ -45,21 +45,21 @@ namespace APIPreventivas.Models
                 .WithMany(c => c.Cronogramas)
                 .HasForeignKey(c => c.IdSupervisor);
 
-            modelBuilder.Entity<Cronograma>()
-                .HasMany(a => a.Alvos)
-                .WithOne(c => c.Cronogramas)
-                .HasForeignKey(a => a.IdAlvo);
-
             modelBuilder.Entity<Site>()
                 .HasKey(s => s.EndId);
 
             modelBuilder.Entity<Site>()
-                .HasOne(c => c.Cronogramas)
-                .WithMany(s => s.Sites)
-                .HasForeignKey(s => s.IdCronograma);
+                .HasOne(a => a.Alvos)
+                .WithOne(s => s.Sites)
+                .HasForeignKey<Alvo>(a => a.IdSite);
 
             modelBuilder.Entity<Alvo>()
-                .HasKey(a => a.IdAlvo);
+                .HasKey(a => a.IdAlvo); 
+
+            modelBuilder.Entity<Alvo>()
+                .HasOne(c => c.Cronogramas)
+                .WithMany(a => a.Alvos)
+                .HasForeignKey(c => c.IdCronograma);
 
             modelBuilder.Entity<Atividade>()
                 .HasKey(a => a.IdAtividade);
@@ -73,13 +73,6 @@ namespace APIPreventivas.Models
                 .HasOne(t => t.Tecnicos)
                 .WithMany(a => a.Atividades)
                 .HasForeignKey(a => a.IdTecnico);
-                
-            //modelBuilder.Entity<Atividade>()
-            //    .Property(a => a.TipoAtividade)
-            //    .HasConversion(
-            //    to => to.ToString(),
-            //    from => (TipoAtividadeEnum)Enum.Parse(typeof(TipoAtividadeEnum), from));
-
         }
     }
 }

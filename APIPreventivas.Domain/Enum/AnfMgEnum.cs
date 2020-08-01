@@ -7,7 +7,7 @@ namespace APIPreventivas.Domain.Enum
 {
     public class AnfMgEnum
     {
-        public enum ANF_MG 
+        public enum ANFMG 
         {
             [Description("31")] BH, 
             [Description("32")] JF, 

@@ -15,9 +15,8 @@ namespace APIPreventivas.Models
         public string Site3g { get; set; }
         public string SiteLte { get; set; }
         public string Cidade { get; set; }
-        public Estado_BR Estado { get; set; }
-        public ANF_MG ANF { get; set; }
-        public int IdCronograma { get; set; }
-        public Cronograma Cronogramas { get; set; }
+        public EstadoBR Estado { get; set; }
+        public ANFMG ANF { get; set; }
+        public virtual Alvo Alvos { get; set; }
     }
 }

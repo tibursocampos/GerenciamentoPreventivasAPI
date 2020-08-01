@@ -7,7 +7,7 @@ namespace APIPreventivas.Domain.Enum
 {
     public class AreaTecnicoEnum
     {
-        public enum Area_tecnico 
+        public enum AreaTecnico 
         { 
             [Description("Equipamento")]equipamento = 1,
             [Description("Infraestrutura")] infraestrutura 

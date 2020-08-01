@@ -11,11 +11,9 @@ namespace APIPreventivas.Models
         public int IdSupervisor { get; set; }
         public Meses Mes { get; set; }
         public int Ano { get; set; }
-        public string IdSite { get; set; }
         public bool Concluido { get; set; }
         public DateTime? DataConclusao { get; set; }
-        public Supervisor Supervisores { get; set; }
-        public ICollection<Site> Sites { get; set; }
-        public ICollection<Alvo> Alvos { get; set; }
+        public virtual Supervisor Supervisores { get; set; }
+        public virtual ICollection<Alvo> Alvos { get; set; }
     }
 }

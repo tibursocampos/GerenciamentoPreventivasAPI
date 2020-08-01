@@ -7,7 +7,7 @@ namespace APIPreventivas.Domain.Enum
 {
     public class TipoUsuarioEnum
     {
-        public enum Tipo_usuario 
+        public enum TipoUsuario 
         {
             [Description("Supervisor")] supervisor = 1,
             [Description("Tecnico")] tecnico 
