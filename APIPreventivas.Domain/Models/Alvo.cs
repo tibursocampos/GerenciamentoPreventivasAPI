@@ -1,12 +1,17 @@
 ﻿using APIPreventivas.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace APIPreventivas.Models
 {
     public class Alvo
     {
+        public Alvo()
+        {
+            Atividades = new Collection<Atividade>();
+        }
         public int IdAlvo { get; set; }
         public int IdCronograma { get; set; }
         public string IdSite { get; set; }

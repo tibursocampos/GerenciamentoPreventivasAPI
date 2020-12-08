@@ -21,16 +21,16 @@ namespace APIPreventivas.Service
             return alvosDoCronograma;
         }
 
-        static public List<Alvo> AlteraStatusAlvo(Cronograma cronograma)
-        {
-            var concluidas = AtividadeService.AtividadesConcluidasIQueryable(cronograma);
-            var atv1 = TipoAtividade.Aterramento;
-            var atv2 = TipoAtividade.Baterias;
-            var atv3 = TipoAtividade.Infraestrutura;
-            var atv4 = TipoAtividade.Acesso;
-            var atv5 = TipoAtividade.MW;
+        //static public List<Alvo> AlteraStatusAlvo(Cronograma cronograma)
+        //{
+        //    var concluidas = AtividadeService.AtividadesConcluidasIQueryable(cronograma);
+        //    var atv1 = TipoAtividade.Aterramento;
+        //    var atv2 = TipoAtividade.Baterias;
+        //    var atv3 = TipoAtividade.Infraestrutura;
+        //    var atv4 = TipoAtividade.Acesso;
+        //    var atv5 = TipoAtividade.MW;
             
 
-        }
+        //}
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APIPreventivas.Persistence.Migrations
 {
-    public partial class relacionamentos : Migration
+    public partial class novodbModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,41 +25,23 @@ namespace APIPreventivas.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Supervisores",
+                name: "Usuarios",
                 columns: table => new
                 {
-                    IdFuncionario = table.Column<int>(nullable: false)
+                    IdUsuario = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CPF = table.Column<int>(nullable: false),
                     PrimeiroNome = table.Column<string>(nullable: true),
                     UltimoNome = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Senha = table.Column<string>(nullable: true),
+                    ANF = table.Column<int>(nullable: false),
                     Permissao = table.Column<int>(nullable: false),
-                    ANF = table.Column<int>(nullable: false)
+                    Area = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Supervisores", x => x.IdFuncionario);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tecnicos",
-                columns: table => new
-                {
-                    IdFuncionario = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CPF = table.Column<int>(nullable: false),
-                    PrimeiroNome = table.Column<string>(nullable: true),
-                    UltimoNome = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Senha = table.Column<string>(nullable: true),
-                    Permissao = table.Column<int>(nullable: false),
-                    Area = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tecnicos", x => x.IdFuncionario);
+                    table.PrimaryKey("PK_Usuarios", x => x.IdUsuario);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,10 +60,10 @@ namespace APIPreventivas.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Cronogramas", x => x.IdCronograma);
                     table.ForeignKey(
-                        name: "FK_Cronogramas_Supervisores_IdSupervisor",
+                        name: "FK_Cronogramas_Usuarios_IdSupervisor",
                         column: x => x.IdSupervisor,
-                        principalTable: "Supervisores",
-                        principalColumn: "IdFuncionario",
+                        principalTable: "Usuarios",
+                        principalColumn: "IdUsuario",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -135,11 +117,11 @@ namespace APIPreventivas.Persistence.Migrations
                         principalColumn: "IdAlvo",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Atividades_Tecnicos_IdTecnico",
+                        name: "FK_Atividades_Usuarios_IdTecnico",
                         column: x => x.IdTecnico,
-                        principalTable: "Tecnicos",
-                        principalColumn: "IdFuncionario",
-                        onDelete: ReferentialAction.Cascade);
+                        principalTable: "Usuarios",
+                        principalColumn: "IdUsuario",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -179,16 +161,13 @@ namespace APIPreventivas.Persistence.Migrations
                 name: "Alvos");
 
             migrationBuilder.DropTable(
-                name: "Tecnicos");
-
-            migrationBuilder.DropTable(
                 name: "Cronogramas");
 
             migrationBuilder.DropTable(
                 name: "Sites");
 
             migrationBuilder.DropTable(
-                name: "Supervisores");
+                name: "Usuarios");
         }
     }
 }

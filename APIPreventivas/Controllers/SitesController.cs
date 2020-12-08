@@ -41,6 +41,62 @@ namespace APIPreventivas.Controllers
             return site;
         }
 
+        // GET: api/Sites/MGPSO_0001
+        [HttpGet("{endId}")]
+        public async Task<ActionResult<Site>> GetSiteByEndId(string endId)
+        {
+            var site = await _context.Sites.FindAsync(endId);
+
+            if (site == null)
+            {
+                return NotFound();
+            }
+
+            return site;
+        }
+
+        // GET: api/Sites/PSVG14
+        [HttpGet("{endId}")]
+        public async Task<ActionResult<Site>> GetSiteBySiteGsm(string nomeGsm)
+        {
+            var site = await _context.Sites.FindAsync(nomeGsm);
+
+            if (site == null)
+            {
+                return NotFound();
+            }
+
+            return site;
+        }
+
+        // GET: api/Sites/MG5014
+        [HttpGet("{endId}")]
+        public async Task<ActionResult<Site>> GetSiteBySiteWcdma(string nomeWcdma)
+        {
+            var site = await _context.Sites.FindAsync(nomeWcdma);
+
+            if (site == null)
+            {
+                return NotFound();
+            }
+
+            return site;
+        }
+
+        // GET: api/Sites/Passos
+        [HttpGet("{endId}")]
+        public async Task<ActionResult<Site>> GetSiteByCidade(string cidade)
+        {
+            var site = await _context.Sites.FindAsync(cidade);
+
+            if (site == null)
+            {
+                return NotFound();
+            }
+
+            return site;
+        }
+
         // PUT: api/Sites/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIPreventivas.Persistence.Migrations
 {
     [DbContext(typeof(APIPreventivaContext))]
-    [Migration("20200726195336_relacionamentos")]
-    partial class relacionamentos
+    [Migration("20200802124557_novo-dbModel")]
+    partial class novodbModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -139,9 +139,9 @@ namespace APIPreventivas.Persistence.Migrations
                     b.ToTable("Sites");
                 });
 
-            modelBuilder.Entity("APIPreventivas.Models.Supervisor", b =>
+            modelBuilder.Entity("APIPreventivas.Models.Usuario", b =>
                 {
-                    b.Property<int>("IdFuncionario")
+                    b.Property<int>("IdUsuario")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -149,37 +149,7 @@ namespace APIPreventivas.Persistence.Migrations
                     b.Property<int>("ANF")
                         .HasColumnType("int");
 
-                    b.Property<int>("CPF")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Permissao")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PrimeiroNome")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Senha")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UltimoNome")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("IdFuncionario");
-
-                    b.ToTable("Supervisores");
-                });
-
-            modelBuilder.Entity("APIPreventivas.Models.Tecnico", b =>
-                {
-                    b.Property<int>("IdFuncionario")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Area")
+                    b.Property<int?>("Area")
                         .HasColumnType("int");
 
                     b.Property<int>("CPF")
@@ -200,9 +170,9 @@ namespace APIPreventivas.Persistence.Migrations
                     b.Property<string>("UltimoNome")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("IdFuncionario");
+                    b.HasKey("IdUsuario");
 
-                    b.ToTable("Tecnicos");
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("APIPreventivas.Domain.Models.Atividade", b =>
@@ -213,10 +183,10 @@ namespace APIPreventivas.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("APIPreventivas.Models.Tecnico", "Tecnicos")
+                    b.HasOne("APIPreventivas.Models.Usuario", "Tecnicos")
                         .WithMany("Atividades")
                         .HasForeignKey("IdTecnico")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -235,7 +205,7 @@ namespace APIPreventivas.Persistence.Migrations
 
             modelBuilder.Entity("APIPreventivas.Models.Cronograma", b =>
                 {
-                    b.HasOne("APIPreventivas.Models.Supervisor", "Supervisores")
+                    b.HasOne("APIPreventivas.Models.Usuario", "Supervisores")
                         .WithMany("Cronogramas")
                         .HasForeignKey("IdSupervisor")
                         .OnDelete(DeleteBehavior.Cascade)

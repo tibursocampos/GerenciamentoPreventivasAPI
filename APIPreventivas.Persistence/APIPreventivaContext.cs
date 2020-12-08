@@ -20,9 +20,8 @@ namespace APIPreventivas.Models
         {
             optionsBuilder.UseSqlServer("Data Source=RAPHAEL-DESKTOP;" + "Initial Catalog=APIPreventivasNovaModel;Integrated Security=True");
         }
-
-        public DbSet<Supervisor> Supervisores { get; set; }
-        public DbSet<Tecnico> Tecnicos { get; set; }
+        
+        public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Cronograma> Cronogramas { get; set; }
         public DbSet<Site> Sites { get; set; }
         public DbSet<Alvo> Alvos { get; set; }
@@ -31,11 +30,8 @@ namespace APIPreventivas.Models
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Supervisor>()
-                .HasKey(s => s.IdFuncionario);
-
-            modelBuilder.Entity<Tecnico>()
-                .HasKey(t => t.IdFuncionario);           
+            modelBuilder.Entity<Usuario>()
+                .HasKey(t => t.IdUsuario);           
 
             modelBuilder.Entity<Cronograma>()
                 .HasKey(c => c.IdCronograma);
@@ -72,7 +68,8 @@ namespace APIPreventivas.Models
             modelBuilder.Entity<Atividade>()
                 .HasOne(t => t.Tecnicos)
                 .WithMany(a => a.Atividades)
-                .HasForeignKey(a => a.IdTecnico);
+                .HasForeignKey(a => a.IdTecnico)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

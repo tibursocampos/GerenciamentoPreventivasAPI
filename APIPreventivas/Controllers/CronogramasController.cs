@@ -41,6 +41,35 @@ namespace APIPreventivas.Controllers
             return cronograma;
         }
 
+        // GET: api/Cronogramas/mes
+        [HttpGet("{mes}")]
+        public async Task<ActionResult<Cronograma>> GetCronogramaByMes(int mes)
+        {
+            var cronograma = await _context.Cronogramas.FindAsync(id);
+
+            if (cronograma == null)
+            {
+                return NotFound();
+            }
+
+            return cronograma;
+        }
+
+        // GET: api/Cronogramas/ano
+        [HttpGet("{ano}")]
+        public async Task<ActionResult<Cronograma>> GetCronogramaByYear(int year)
+        {
+            var cronograma = await _context.Cronogramas.FindAsync(year);
+
+            if (cronograma == null)
+            {
+                return NotFound();
+            }
+
+            return cronograma;
+        }
+
+        
         // PUT: api/Cronogramas/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace APIPreventivas.Domain.Enum
 {
@@ -9,7 +6,8 @@ namespace APIPreventivas.Domain.Enum
     {
         public enum TipoUsuario 
         {
-            [Description("Supervisor")] supervisor = 1,
+            [Description("Admin")] admin = 1,
+            [Description("Supervisor")] supervisor,
             [Description("Tecnico")] tecnico 
           
         }

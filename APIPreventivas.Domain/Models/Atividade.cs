@@ -15,7 +15,7 @@ namespace APIPreventivas.Domain.Models
         public TipoAtividade TipoAtividade { get; set; }
         public DateTime DataProgramacao { get; set; }
         public DateTime? DataConclusao { get; set; }
-        public virtual Tecnico Tecnicos { get; set; }
+        public virtual Usuario Tecnicos { get; set; }
         public virtual Alvo Alvos { get; set; }
     }
 }
