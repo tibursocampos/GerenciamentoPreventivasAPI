@@ -1,50 +1,25 @@
-﻿using System;
+﻿using APIPreventivas.Domain.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace APIPreventivas.Models
 {
     public class Alvo
     {
-        public int Id_alvo { get; set; }
-        public int Id_cronograma { get; set; }
-        public int Id_supervisor { get; set; }
-        public string Site_end_id { get; set; }
-        public bool Status { get; set; }
-        public DateTime? Data_conclusao { get; set; }
-        public int? Id_tecnico_prog_aterramento { get; set; }
-        public DateTime? Data_tecnico_prog_aterramento { get; set; }
-        public int? Id_tecnico_exec_aterramento { get; set; }
-        public DateTime? Data_tecnico_exec_aterramento { get; set; }
-        public int? Id_tecnico_prog_bateria { get; set; }
-        public DateTime? Data_tecnico_prog_bateria { get; set; }
-        public int? Id_tecnico_exec_bateria { get; set; }
-        public DateTime? Data_tecnico_exec_bateria { get; set; }
-        public int? Id_tecnico_prog_infra { get; set; }
-        public DateTime? Data_tecnico_prog_infra { get; set; }
-        public int? Id_tecnico_exec_infra { get; set; }
-        public DateTime? Data_tecnico_exec_infra { get; set; }
-        public int? Id_tecnico_prog_acesso { get; set; }
-        public DateTime? Data_tecnico_prog_acesso { get; set; }
-        public int? Id_tecnico_exec_acesso { get; set; }
-        public DateTime? Data_tecnico_exec_acesso { get; set; }
-        public int? Id_tecnico_prog_mw { get; set; }
-        public DateTime? Data_tecnico_prog_mw { get; set; }
-        public int? Id_tecnico_exec_mw { get; set; }
-        public DateTime? Data_tecnico_exec_mw { get; set; }
-        public ICollection<TecnicoAlvo> Tecnicos_alvos { get; set; }
-        public Cronograma Cronogramas { get; set; }
-        public Site Sites { get; set; }
-
-        public Alvo VerificaStatus(Alvo alvoVerificado)
+        public Alvo()
         {
-            if ((alvoVerificado.Id_tecnico_exec_aterramento & alvoVerificado.Id_tecnico_exec_bateria & alvoVerificado.Id_tecnico_exec_infra & alvoVerificado.Id_tecnico_exec_acesso & alvoVerificado.Id_tecnico_exec_mw) != null)
-            {
-                alvoVerificado.Status = true;
-            }
-
-            return alvoVerificado;
+            Atividades = new Collection<Atividade>();
         }
+        public int IdAlvo { get; set; }
+        public int IdCronograma { get; set; }
+        public string IdSite { get; set; }
+        public bool Concluido { get; set; }
+        public DateTime? DataConclusao { get; set; }
+        public Cronograma Cronogramas { get; set; }
+        public virtual ICollection<Atividade> Atividades { get; set; }   
+        public virtual Site Sites { get; set; }
 
     }   
 

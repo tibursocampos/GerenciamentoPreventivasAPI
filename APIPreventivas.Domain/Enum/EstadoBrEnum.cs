@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace APIPreventivas.Domain.Enum
 {
     public class EstadoBrEnum
     {
-        public enum Estado_BR
+        public enum EstadoBR
         {
             [Description("Acre")] AC, [Description("Alagoas")] AL, [Description("Amapá")] AP, [Description("Amazonas")] AM, [Description("Bahia")] BA,
             [Description("Ceará")] CE, [Description("Distrito Federal")] DF, [Description("Espirito Santo")] ES, [Description("Goiás")] GO, [Description("Maranhão")] MA,

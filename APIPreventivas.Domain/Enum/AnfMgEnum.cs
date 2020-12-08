@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace APIPreventivas.Domain.Enum
 {
     public class AnfMgEnum
     {
-        public enum ANF_MG 
+        public enum ANFMG 
         {
-            [Description("31")] BH, [Description("32")] JF, [Description("33")] GV, [Description("34")] UR, [Description("35")] VG, [Description("37")] DV 
+            [Description("31")] BH, 
+            [Description("32")] JF, 
+            [Description("33")] GV, 
+            [Description("34")] UR, 
+            [Description("35")] VG, 
+            [Description("37")] DV 
         }
     }
 }

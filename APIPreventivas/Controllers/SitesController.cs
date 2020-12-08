@@ -41,13 +41,69 @@ namespace APIPreventivas.Controllers
             return site;
         }
 
+        // GET: api/Sites/MGPSO_0001
+        [HttpGet("{endId}")]
+        public async Task<ActionResult<Site>> GetSiteByEndId(string endId)
+        {
+            var site = await _context.Sites.FindAsync(endId);
+
+            if (site == null)
+            {
+                return NotFound();
+            }
+
+            return site;
+        }
+
+        // GET: api/Sites/PSVG14
+        [HttpGet("{endId}")]
+        public async Task<ActionResult<Site>> GetSiteBySiteGsm(string nomeGsm)
+        {
+            var site = await _context.Sites.FindAsync(nomeGsm);
+
+            if (site == null)
+            {
+                return NotFound();
+            }
+
+            return site;
+        }
+
+        // GET: api/Sites/MG5014
+        [HttpGet("{endId}")]
+        public async Task<ActionResult<Site>> GetSiteBySiteWcdma(string nomeWcdma)
+        {
+            var site = await _context.Sites.FindAsync(nomeWcdma);
+
+            if (site == null)
+            {
+                return NotFound();
+            }
+
+            return site;
+        }
+
+        // GET: api/Sites/Passos
+        [HttpGet("{endId}")]
+        public async Task<ActionResult<Site>> GetSiteByCidade(string cidade)
+        {
+            var site = await _context.Sites.FindAsync(cidade);
+
+            if (site == null)
+            {
+                return NotFound();
+            }
+
+            return site;
+        }
+
         // PUT: api/Sites/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSite(string id, Site site)
         {
-            if (id != site.End_id)
+            if (id != site.EndId)
             {
                 return BadRequest();
             }
@@ -86,7 +142,7 @@ namespace APIPreventivas.Controllers
             }
             catch (DbUpdateException)
             {
-                if (SiteExists(site.End_id))
+                if (SiteExists(site.EndId))
                 {
                     return Conflict();
                 }
@@ -96,7 +152,7 @@ namespace APIPreventivas.Controllers
                 }
             }
 
-            return CreatedAtAction("GetSite", new { id = site.End_id }, site);
+            return CreatedAtAction("GetSite", new { id = site.EndId }, site);
         }
 
         // DELETE: api/Sites/5
@@ -117,7 +173,7 @@ namespace APIPreventivas.Controllers
 
         private bool SiteExists(string id)
         {
-            return _context.Sites.Any(e => e.End_id == id);
+            return _context.Sites.Any(e => e.EndId == id);
         }
     }
 }

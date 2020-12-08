@@ -10,13 +10,13 @@ namespace APIPreventivas.Models
 {
     public class Site
     {                
-        public string End_id { get; set; }
-        public string Site_gsm { get; set; }
-        public string Site_3g { get; set; }
-        public string Site_lte { get; set; }
+        public string EndId { get; set; }
+        public string SiteGsm { get; set; }
+        public string Site3g { get; set; }
+        public string SiteLte { get; set; }
         public string Cidade { get; set; }
-        public Estado_BR Estado { get; set; }
-        public ANF_MG ANF { get; set; }
-        public ICollection<Alvo> Alvos { get; set; }
+        public EstadoBR Estado { get; set; }
+        public ANFMG ANF { get; set; }
+        public virtual Alvo Alvos { get; set; }
     }
 }

@@ -41,13 +41,42 @@ namespace APIPreventivas.Controllers
             return cronograma;
         }
 
+        // GET: api/Cronogramas/mes
+        [HttpGet("{mes}")]
+        public async Task<ActionResult<Cronograma>> GetCronogramaByMes(int mes)
+        {
+            var cronograma = await _context.Cronogramas.FindAsync(mes);
+
+            if (cronograma == null)
+            {
+                return NotFound();
+            }
+
+            return cronograma;
+        }
+
+        // GET: api/Cronogramas/ano
+        [HttpGet("{ano}")]
+        public async Task<ActionResult<Cronograma>> GetCronogramaByYear(int year)
+        {
+            var cronograma = await _context.Cronogramas.FindAsync(year);
+
+            if (cronograma == null)
+            {
+                return NotFound();
+            }
+
+            return cronograma;
+        }
+
+        
         // PUT: api/Cronogramas/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCronograma(int id, Cronograma cronograma)
         {
-            if (id != cronograma.Id_cronograma)
+            if (id != cronograma.IdCronograma)
             {
                 return BadRequest();
             }
@@ -82,7 +111,7 @@ namespace APIPreventivas.Controllers
             _context.Cronogramas.Add(cronograma);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCronograma", new { id = cronograma.Id_cronograma }, cronograma);
+            return CreatedAtAction("GetCronograma", new { id = cronograma.IdCronograma }, cronograma);
         }
 
         // DELETE: api/Cronogramas/5
@@ -103,7 +132,7 @@ namespace APIPreventivas.Controllers
 
         private bool CronogramaExists(int id)
         {
-            return _context.Cronogramas.Any(e => e.Id_cronograma == id);
+            return _context.Cronogramas.Any(e => e.IdCronograma == id);
         }
     }
 }
