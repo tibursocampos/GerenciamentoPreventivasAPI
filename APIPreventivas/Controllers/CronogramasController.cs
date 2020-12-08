@@ -45,7 +45,7 @@ namespace APIPreventivas.Controllers
         [HttpGet("{mes}")]
         public async Task<ActionResult<Cronograma>> GetCronogramaByMes(int mes)
         {
-            var cronograma = await _context.Cronogramas.FindAsync(id);
+            var cronograma = await _context.Cronogramas.FindAsync(mes);
 
             if (cronograma == null)
             {
