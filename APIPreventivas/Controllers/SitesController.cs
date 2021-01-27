@@ -56,7 +56,7 @@ namespace APIPreventivas.Controllers
         }
 
         // GET: api/Sites/PSVG14
-        [HttpGet("{endId}")]
+        [HttpGet("{nomeGsm}")]
         public async Task<ActionResult<Site>> GetSiteBySiteGsm(string nomeGsm)
         {
             var site = await _context.Sites.FindAsync(nomeGsm);
@@ -70,7 +70,7 @@ namespace APIPreventivas.Controllers
         }
 
         // GET: api/Sites/MG5014
-        [HttpGet("{endId}")]
+        [HttpGet("{nomeWcdma}")]
         public async Task<ActionResult<Site>> GetSiteBySiteWcdma(string nomeWcdma)
         {
             var site = await _context.Sites.FindAsync(nomeWcdma);
@@ -84,7 +84,7 @@ namespace APIPreventivas.Controllers
         }
 
         // GET: api/Sites/Passos
-        [HttpGet("{endId}")]
+        [HttpGet("{cidade}")]
         public async Task<ActionResult<Site>> GetSiteByCidade(string cidade)
         {
             var site = await _context.Sites.FindAsync(cidade);

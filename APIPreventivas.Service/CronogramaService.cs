@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using static APIPreventivas.Domain.Enum.MesesEnum;
+using APIPreventivas.Service;
 
 namespace APIPreventivas.Service
 {
@@ -30,6 +31,28 @@ namespace APIPreventivas.Service
                                select cronog.IdCronograma;
 
             return idCronogramaBusca.First();
+        }
+
+        //Altera cronograma para concluído
+        static public Cronograma AlteraStatusCronograma(Cronograma cronograma)
+        {
+            if (cronograma.Concluido == false)
+            {
+                bool todosConcluidos = true;
+                var cronogramaAlvos = AlvoService.ListaAlvosCronograma(cronograma);                
+                foreach (var alvos in cronogramaAlvos)
+                { 
+                    if (alvos.Concluido == false)
+                    {
+                        todosConcluidos = false;
+                    }                
+                }
+                if (todosConcluidos == true)
+                {
+                    cronograma.Concluido = true;
+                }
+            }
+            return cronograma;
         }
     }
 }

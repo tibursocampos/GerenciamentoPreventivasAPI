@@ -28,9 +28,38 @@ namespace APIPreventivas.Service
         //    var atv2 = TipoAtividade.Baterias;
         //    var atv3 = TipoAtividade.Infraestrutura;
         //    var atv4 = TipoAtividade.Acesso;
-        //    var atv5 = TipoAtividade.MW;
-            
-
+        //    var atv5 = TipoAtividade.MW;        
         //}
+
+        //atualiza status do alvo para concluído caso todas atividades estejam concluídas
+        static public Alvo AlteraStatusAlvo (Alvo alvo)
+        {
+            Cronograma cronograma = (Cronograma)from cronogramas in db.Cronogramas
+                                                where cronogramas.IdCronograma == alvo.IdCronograma
+                                                select cronogramas;
+            if (alvo.Concluido == false)
+            {
+                ListaAlvosCronograma(cronograma);
+                int contAtividades = 0;
+                var atividadesAlvo = (List<Atividade>)from atividades in db.Atividades
+                                                      where atividades.IdAlvo == alvo.IdAlvo
+                                                      select atividades;
+                foreach (var atividades in atividadesAlvo)
+                {
+                    if (atividades.DataConclusao is null)
+                        break ;
+                    else
+                    {
+                        contAtividades++;
+                    }
+                }               
+                if (contAtividades == 5)
+                {
+                    alvo.Concluido = true;
+                }
+            }
+
+            return alvo;
+        }
     }
 }

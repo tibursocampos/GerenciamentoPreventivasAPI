@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIPreventivas.Models;
+using APIPreventivas.Service;
 
 namespace APIPreventivas.Controllers
 {
@@ -18,7 +19,7 @@ namespace APIPreventivas.Controllers
         public AlvosController(APIPreventivaContext context)
         {
             _context = context;
-        }
+        }     
 
         // GET: api/Alvos
         [HttpGet]
@@ -71,6 +72,7 @@ namespace APIPreventivas.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                AlvoService.AlteraStatusAlvo(alvo);
             }
             catch (DbUpdateConcurrencyException)
             {

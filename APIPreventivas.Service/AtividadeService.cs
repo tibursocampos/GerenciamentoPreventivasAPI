@@ -47,7 +47,7 @@ namespace APIPreventivas.Service
             return atividadesConcluidas.ToList();
         }
 
-        static public IEnumerable<Atividade> AtividadesConcluidasIQueryable(Cronograma cronograma)
+        static public IEnumerable<Atividade> AtividadesConcluidasIEnumerable(Cronograma cronograma)
         {
             var alvos = AlvoService.ListaAlvosCronograma(cronograma);
             var atividadesConcluidas = (IEnumerable<Atividade>) from atividade in db.Atividades

@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\APIPreventivas.Persistence\APIPreventivas.Persistence.csproj" />
+    <ProjectReference Include="..\APIPreventivas.Service\APIPreventivas.Service.csproj" />
   </ItemGroup>
 
 

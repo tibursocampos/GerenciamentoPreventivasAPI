@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APIPreventivas.Persistence.Migrations
 {
-    public partial class novodbModel : Migration
+    public partial class _100921 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

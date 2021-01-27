@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIPreventivas.Persistence.Migrations
 {
     [DbContext(typeof(APIPreventivaContext))]
-    [Migration("20200802124557_novo-dbModel")]
-    partial class novodbModel
+    [Migration("20210110103917_10-09-21")]
+    partial class _100921
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
