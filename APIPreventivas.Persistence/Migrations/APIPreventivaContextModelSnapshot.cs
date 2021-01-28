@@ -19,6 +19,21 @@ namespace APIPreventivas.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("APIPreventivas.Domain.Models.AlvoSite", b =>
+                {
+                    b.Property<int>("IdAlvo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdSite")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdAlvo", "IdSite");
+
+                    b.HasIndex("IdSite");
+
+                    b.ToTable("AlvoSite");
+                });
+
             modelBuilder.Entity("APIPreventivas.Domain.Models.Atividade", b =>
                 {
                     b.Property<int>("IdAtividade")
@@ -67,15 +82,11 @@ namespace APIPreventivas.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("IdSite")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdAlvo");
 
                     b.HasIndex("IdCronograma");
-
-                    b.HasIndex("IdSite")
-                        .IsUnique()
-                        .HasFilter("[IdSite] IS NOT NULL");
 
                     b.ToTable("Alvos");
                 });
@@ -111,13 +122,20 @@ namespace APIPreventivas.Persistence.Migrations
 
             modelBuilder.Entity("APIPreventivas.Models.Site", b =>
                 {
-                    b.Property<string>("EndId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("IdSite")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ANF")
                         .HasColumnType("int");
 
                     b.Property<string>("Cidade")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EndId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Estado")
@@ -132,7 +150,7 @@ namespace APIPreventivas.Persistence.Migrations
                     b.Property<string>("SiteLte")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("EndId");
+                    b.HasKey("IdSite");
 
                     b.ToTable("Sites");
                 });
@@ -150,8 +168,8 @@ namespace APIPreventivas.Persistence.Migrations
                     b.Property<int?>("Area")
                         .HasColumnType("int");
 
-                    b.Property<int>("CPF")
-                        .HasColumnType("int");
+                    b.Property<string>("CPF")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -171,6 +189,21 @@ namespace APIPreventivas.Persistence.Migrations
                     b.HasKey("IdUsuario");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("APIPreventivas.Domain.Models.AlvoSite", b =>
+                {
+                    b.HasOne("APIPreventivas.Models.Alvo", "Alvo")
+                        .WithMany("AlvosSites")
+                        .HasForeignKey("IdAlvo")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("APIPreventivas.Models.Site", "Site")
+                        .WithMany("AlvosSites")
+                        .HasForeignKey("IdSite")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("APIPreventivas.Domain.Models.Atividade", b =>
@@ -195,10 +228,6 @@ namespace APIPreventivas.Persistence.Migrations
                         .HasForeignKey("IdCronograma")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("APIPreventivas.Models.Site", "Sites")
-                        .WithOne("Alvos")
-                        .HasForeignKey("APIPreventivas.Models.Alvo", "IdSite");
                 });
 
             modelBuilder.Entity("APIPreventivas.Models.Cronograma", b =>

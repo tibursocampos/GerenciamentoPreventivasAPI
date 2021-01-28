@@ -11,6 +11,7 @@ namespace APIPreventivas.Models
         public Alvo()
         {
             Atividades = new Collection<Atividade>();
+            //Sites = new Collection<Site>();
         }
         public int IdAlvo { get; set; }
         public int IdCronograma { get; set; }
@@ -19,7 +20,8 @@ namespace APIPreventivas.Models
         public DateTime? DataConclusao { get; set; }
         public Cronograma Cronogramas { get; set; }
         public virtual ICollection<Atividade> Atividades { get; set; }   
-        public virtual Site Sites { get; set; }
+        public  ICollection<AlvoSite> AlvosSites { get; set; }
+        //public virtual Site Sitess { get; set; }
 
     }   
 

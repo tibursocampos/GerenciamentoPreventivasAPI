@@ -19,7 +19,7 @@ namespace APIPreventivas.Controllers
         public AlvosController(APIPreventivaContext context)
         {
             _context = context;
-        }     
+        }
 
         // GET: api/Alvos
         [HttpGet]
