@@ -97,6 +97,7 @@ namespace APIPreventivas.Controllers
         {
             _context.Alvos.Add(alvo);
             await _context.SaveChangesAsync();
+            AlvoService.relacionaAlvoSite(alvo);
 
             return CreatedAtAction("GetAlvo", new { id = alvo.IdAlvo }, alvo);
         }

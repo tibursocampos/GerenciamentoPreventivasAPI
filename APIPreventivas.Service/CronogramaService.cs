@@ -52,6 +52,8 @@ namespace APIPreventivas.Service
                     cronograma.Concluido = true;
                 }
             }
+            db.Cronogramas.Add(cronograma);
+            db.SaveChangesAsync();
             return cronograma;
         }
     }

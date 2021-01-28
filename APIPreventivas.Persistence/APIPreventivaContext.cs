@@ -25,6 +25,7 @@ namespace APIPreventivas.Models
         public DbSet<Cronograma> Cronogramas { get; set; }
         public DbSet<Site> Sites { get; set; }
         public DbSet<Alvo> Alvos { get; set; }
+        public DbSet<AlvoSite> AlvosSites { get; set; }
         public DbSet<Atividade> Atividades { get; set; }
         
         

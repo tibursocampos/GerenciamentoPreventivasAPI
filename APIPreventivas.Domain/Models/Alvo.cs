@@ -15,7 +15,7 @@ namespace APIPreventivas.Models
         }
         public int IdAlvo { get; set; }
         public int IdCronograma { get; set; }
-        public string IdSite { get; set; }
+        public int IdSite { get; set; }
         public bool Concluido { get; set; }
         public DateTime? DataConclusao { get; set; }
         public Cronograma Cronogramas { get; set; }

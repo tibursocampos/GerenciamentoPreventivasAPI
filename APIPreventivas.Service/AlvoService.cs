@@ -59,7 +59,23 @@ namespace APIPreventivas.Service
                 }
             }
 
+            db.Alvos.Add(alvo);
+            db.SaveChangesAsync();
             return alvo;
+        }
+
+        //relacionar alvo com site
+        static public AlvoSite relacionaAlvoSite(Alvo alvo)
+        {
+            AlvoSite novoRelacionamento = new AlvoSite();
+
+            novoRelacionamento.IdAlvo = alvo.IdAlvo;
+            novoRelacionamento.IdSite = alvo.IdSite;
+            
+            db.AlvosSites.Add(novoRelacionamento);
+            db.SaveChangesAsync();
+
+            return novoRelacionamento;
         }
     }
 }
