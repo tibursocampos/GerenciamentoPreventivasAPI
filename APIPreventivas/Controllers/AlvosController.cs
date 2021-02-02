@@ -67,12 +67,12 @@ namespace APIPreventivas.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(alvo).State = EntityState.Modified;
+            _context.Entry(alvo).State = EntityState.Modified;            
 
             try
             {
                 await _context.SaveChangesAsync();
-                AlvoService.AlteraStatusAlvo(alvo);
+                //await AlvoService.AlteraStatusAlvo(alvo);
             }
             catch (DbUpdateConcurrencyException)
             {

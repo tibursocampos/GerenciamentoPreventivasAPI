@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APIPreventivas.Persistence.Migrations
 {
-    public partial class correcaoAlvoSite : Migration
+    public partial class novoDbJanDia28 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,7 +76,7 @@ namespace APIPreventivas.Persistence.Migrations
                     IdAlvo = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdCronograma = table.Column<int>(nullable: false),
-                    IdSite = table.Column<string>(nullable: true),
+                    IdSite = table.Column<int>(nullable: false),
                     Concluido = table.Column<bool>(nullable: false),
                     DataConclusao = table.Column<DateTime>(nullable: true)
                 },
@@ -92,7 +92,7 @@ namespace APIPreventivas.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AlvoSite",
+                name: "AlvosSites",
                 columns: table => new
                 {
                     IdAlvo = table.Column<int>(nullable: false),
@@ -100,15 +100,15 @@ namespace APIPreventivas.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AlvoSite", x => new { x.IdAlvo, x.IdSite });
+                    table.PrimaryKey("PK_AlvosSites", x => new { x.IdAlvo, x.IdSite });
                     table.ForeignKey(
-                        name: "FK_AlvoSite_Alvos_IdAlvo",
+                        name: "FK_AlvosSites_Alvos_IdAlvo",
                         column: x => x.IdAlvo,
                         principalTable: "Alvos",
                         principalColumn: "IdAlvo",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AlvoSite_Sites_IdSite",
+                        name: "FK_AlvosSites_Sites_IdSite",
                         column: x => x.IdSite,
                         principalTable: "Sites",
                         principalColumn: "IdSite",
@@ -150,8 +150,8 @@ namespace APIPreventivas.Persistence.Migrations
                 column: "IdCronograma");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AlvoSite_IdSite",
-                table: "AlvoSite",
+                name: "IX_AlvosSites_IdSite",
+                table: "AlvosSites",
                 column: "IdSite");
 
             migrationBuilder.CreateIndex(
@@ -173,7 +173,7 @@ namespace APIPreventivas.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AlvoSite");
+                name: "AlvosSites");
 
             migrationBuilder.DropTable(
                 name: "Atividades");

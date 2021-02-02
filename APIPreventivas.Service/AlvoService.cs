@@ -5,6 +5,8 @@ using System.Text;
 using System.Linq;
 using static APIPreventivas.Domain.Enum.TipoAtividadeEnum;
 using APIPreventivas.Domain.Models;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace APIPreventivas.Service
 {
@@ -19,27 +21,17 @@ namespace APIPreventivas.Service
                                     select alvos;                       
                                
             return alvosDoCronograma;
-        }
-
-        //static public List<Alvo> AlteraStatusAlvo(Cronograma cronograma)
-        //{
-        //    var concluidas = AtividadeService.AtividadesConcluidasIQueryable(cronograma);
-        //    var atv1 = TipoAtividade.Aterramento;
-        //    var atv2 = TipoAtividade.Baterias;
-        //    var atv3 = TipoAtividade.Infraestrutura;
-        //    var atv4 = TipoAtividade.Acesso;
-        //    var atv5 = TipoAtividade.MW;        
-        //}
+        }     
 
         //atualiza status do alvo para concluído caso todas atividades estejam concluídas
-        static public Alvo AlteraStatusAlvo (Alvo alvo)
+        static public async Task<IActionResult> AlteraStatusAlvo (Alvo alvo)
         {
-            Cronograma cronograma = (Cronograma)from cronogramas in db.Cronogramas
-                                                where cronogramas.IdCronograma == alvo.IdCronograma
-                                                select cronogramas;
+            //var cronograma = (Cronograma)from cronogramas in db.Cronogramas
+            //                                    where cronogramas.IdCronograma == alvo.IdCronograma
+            //                                    select cronogramas;
             if (alvo.Concluido == false)
             {
-                ListaAlvosCronograma(cronograma);
+                //ListaAlvosCronograma(cronograma);
                 int contAtividades = 0;
                 var atividadesAlvo = (List<Atividade>)from atividades in db.Atividades
                                                       where atividades.IdAlvo == alvo.IdAlvo
@@ -47,7 +39,9 @@ namespace APIPreventivas.Service
                 foreach (var atividades in atividadesAlvo)
                 {
                     if (atividades.DataConclusao is null)
-                        break ;
+                    {
+                        //break ;
+                    }
                     else
                     {
                         contAtividades++;
@@ -59,9 +53,9 @@ namespace APIPreventivas.Service
                 }
             }
 
-            db.Alvos.Add(alvo);
-            db.SaveChangesAsync();
-            return alvo;
+            db.Alvos.Update(alvo);
+            await db.SaveChangesAsync();
+            return (IActionResult)alvo;
         }
 
         //relacionar alvo com site

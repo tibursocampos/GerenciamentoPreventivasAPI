@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIPreventivas.Domain.Models;
 using APIPreventivas.Models;
+using APIPreventivas.Service;
 
 namespace APIPreventivas.Controllers
 {
@@ -58,6 +59,7 @@ namespace APIPreventivas.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                await AtividadeService.AlteraStatusAlvo(atividade);
             }
             catch (DbUpdateConcurrencyException)
             {

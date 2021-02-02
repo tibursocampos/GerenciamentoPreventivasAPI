@@ -31,7 +31,7 @@ namespace APIPreventivas.Persistence.Migrations
 
                     b.HasIndex("IdSite");
 
-                    b.ToTable("AlvoSite");
+                    b.ToTable("AlvosSites");
                 });
 
             modelBuilder.Entity("APIPreventivas.Domain.Models.Atividade", b =>
@@ -81,8 +81,8 @@ namespace APIPreventivas.Persistence.Migrations
                     b.Property<int>("IdCronograma")
                         .HasColumnType("int");
 
-                    b.Property<string>("IdSite")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("IdSite")
+                        .HasColumnType("int");
 
                     b.HasKey("IdAlvo");
 
