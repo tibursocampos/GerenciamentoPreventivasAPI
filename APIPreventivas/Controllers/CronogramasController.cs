@@ -72,8 +72,6 @@ namespace APIPreventivas.Controllers
 
         
         // PUT: api/Cronogramas/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCronograma(int id, Cronograma cronograma)
         {
@@ -105,8 +103,6 @@ namespace APIPreventivas.Controllers
         }
 
         // POST: api/Cronogramas
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Cronograma>> PostCronograma(Cronograma cronograma)
         {

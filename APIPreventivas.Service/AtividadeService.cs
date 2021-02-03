@@ -61,17 +61,16 @@ namespace APIPreventivas.Service
             return atividadesConcluidas;
         }
 
-        //atualiza status do alvo para concluído caso todas atividades estejam concluídas
+        //atualiza status da atividade, alvo e cronograma para concluído caso todas atividades e alvos estejam concluídos
         static public async Task<IActionResult> AlteraStatusAlvo(Atividade atividade)
-        //static public Alvo AlteraStatusAlvo(Atividade atividade)
         {
-            int contAtividades = 0;            
-            //var cronograma = (Cronograma)from cronogramas in db.Cronogramas
-            //                                    where cronogramas.IdCronograma == alvo.IdCronograma
-            //                                    select cronogramas;
+            int contAtividades = 0;
+            int contAlvos = 0;
+            int contAlvosConcl = 0;
+            int cronoAtual = 0;
+
             if (atividade.DataConclusao.HasValue)
-                {
-                    //ListaAlvosCronograma(cronograma);                
+                {               
                     var atividadesAlvo = from atividades in db.Atividades
                                          where atividades.IdAlvo == atividade.IdAlvo
                                          select atividades;
@@ -84,11 +83,12 @@ namespace APIPreventivas.Service
                     }
                 }
 
-            //var alvo = from alvoUpdate in db.Alvos
-            //           where alvoUpdate.IdAlvo == atividade.IdAlvo
-            //           select alvoUpdate;
-
             var alvo = db.Alvos.Where(a => a.IdAlvo == atividade.IdAlvo).ToListAsync();
+
+            var cronogramaAtual = from alvos in db.Alvos
+                                  join crono in db.Cronogramas on alvos.IdCronograma equals crono.IdCronograma
+                                  where alvos.IdAlvo == atividade.IdAlvo
+                                  select crono;
 
             if (contAtividades == 5)
             {
@@ -97,7 +97,34 @@ namespace APIPreventivas.Service
                     alteraAlvo.Concluido = true;
                     alteraAlvo.DataConclusao = atividade.DataConclusao;
                     db.Alvos.Update(alteraAlvo);
-                    await db.SaveChangesAsync();
+                }
+
+                foreach (var crono in cronogramaAtual)
+                {
+                    cronoAtual = crono.IdCronograma;
+                }
+
+                var alvosCronograma = from alvos in db.Alvos
+                                      where alvos.IdCronograma == cronoAtual
+                                      select alvos;
+
+                foreach (var alteraCrono in await alvosCronograma.ToListAsync())
+                {
+                    contAlvos++;
+                    if (alteraCrono.Concluido)
+                    {
+                        contAlvosConcl++;
+                    }
+                }
+
+                if(contAlvos == contAlvosConcl)
+                {
+                    foreach (var alteraCrono in await cronogramaAtual.ToListAsync())
+                    {
+                        alteraCrono.Concluido = true;
+                        alteraCrono.DataConclusao = atividade.DataConclusao;
+                        db.Cronogramas.Update(alteraCrono);
+                    }
                 }
 
             }
@@ -108,13 +135,18 @@ namespace APIPreventivas.Service
                     alteraAlvo.Concluido = false;
                     alteraAlvo.DataConclusao = null;
                     db.Alvos.Update(alteraAlvo);
-                    await db.SaveChangesAsync();
+                }
+
+                foreach (var alteraCrono in await cronogramaAtual.ToListAsync())
+                {
+                    alteraCrono.Concluido = false;
+                    alteraCrono.DataConclusao = null;
+                    db.Cronogramas.Update(alteraCrono);
                 }
             }
-                       
+
+            await db.SaveChangesAsync();
             return (IActionResult)alvo;
         }
-
-
     }
 }

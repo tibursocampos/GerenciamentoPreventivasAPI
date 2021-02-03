@@ -43,9 +43,7 @@ namespace APIPreventivas.Controllers
             return atividade;
         }
 
-        // PUT: api/Atividades/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // PUT: api/Atividades/5        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAtividade(int id, Atividade atividade)
         {
@@ -77,8 +75,6 @@ namespace APIPreventivas.Controllers
         }
 
         // POST: api/Atividades
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Atividade>> PostAtividade(Atividade atividade)
         {

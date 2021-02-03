@@ -57,8 +57,6 @@ namespace APIPreventivas.Controllers
         }
 
         // PUT: api/Alvos/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAlvo(int id, Alvo alvo)
         {
@@ -72,7 +70,6 @@ namespace APIPreventivas.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                //await AlvoService.AlteraStatusAlvo(alvo);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -90,8 +87,6 @@ namespace APIPreventivas.Controllers
         }
 
         // POST: api/Alvos
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Alvo>> PostAlvo(Alvo alvo)
         {
