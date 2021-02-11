@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using APIPreventivas.Domain.Models;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

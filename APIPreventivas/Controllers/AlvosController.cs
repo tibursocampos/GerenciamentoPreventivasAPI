@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIPreventivas.Models;
 using APIPreventivas.Service;
+using APIPreventivas.Domain.Models;
+using static APIPreventivas.Domain.Enum.TipoAtividadeEnum;
 
 namespace APIPreventivas.Controllers
 {
@@ -42,19 +44,19 @@ namespace APIPreventivas.Controllers
             return alvo;
         }
 
-        // GET: api/Alvos/MGPSO_0001
-        [HttpGet("{endId}")]
-        public async Task<ActionResult<Alvo>> GetAlvoEndId(string EndId)
-        {
-            var alvo = await _context.Alvos.FindAsync(EndId);
+        //// GET: api/Alvos/MGPSO_0001
+        //[HttpGet("{endId}")]
+        //public async Task<ActionResult<Alvo>> GetAlvoEndId(string EndId)
+        //{
+        //    var alvo = await _context.Alvos.FindAsync(EndId);
 
-            if (alvo == null)
-            {
-                return NotFound();
-            }
+        //    if (alvo == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return alvo;
-        }
+        //    return alvo;
+        //}
 
         // PUT: api/Alvos/5
         [HttpPut("{id}")]
@@ -90,10 +92,29 @@ namespace APIPreventivas.Controllers
         [HttpPost]
         public async Task<ActionResult<Alvo>> PostAlvo(Alvo alvo)
         {
-            _context.Alvos.Add(alvo);
-            await _context.SaveChangesAsync();
-            AlvoService.relacionaAlvoSite(alvo);
+            alvo.Atividades = new List<Atividade>();
+            List<Atividade> list = new List<Atividade>();
 
+            Atividade um = new Atividade(TipoAtividade.Aterramento);
+            list.Add(um);
+            Atividade dois = new Atividade(TipoAtividade.Baterias);
+            list.Add(dois);
+            Atividade tres = new Atividade(TipoAtividade.Infraestrutura);
+            list.Add(tres);
+            Atividade quatro = new Atividade(TipoAtividade.Acesso);
+            list.Add(quatro);
+            Atividade cinco = new Atividade(TipoAtividade.MW);
+            list.Add(cinco);
+            
+            foreach(var lista in list)
+            {
+                alvo.Atividades.Add(lista);
+            }                       
+            
+            _context.Alvos.Add(alvo);      
+            await _context.SaveChangesAsync();            
+            AlvoService.relacionaAlvoSite(alvo);
+            
             return CreatedAtAction("GetAlvo", new { id = alvo.IdAlvo }, alvo);
         }
 

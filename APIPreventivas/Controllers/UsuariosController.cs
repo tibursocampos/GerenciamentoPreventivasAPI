@@ -41,19 +41,19 @@ namespace APIPreventivas.Controllers
             return usuario;
         }
 
-        // GET: api/Usuarios/12345678999
-        [HttpGet("{cpf}")]
-        public async Task<ActionResult<Usuario>> GetUsuarioCPF(string cpf)
-        {
-            var usuario = await _context.Usuarios.FindAsync(cpf);
+        //// GET: api/Usuarios/12345678999
+        //[HttpGet("{cpf}")]
+        //public async Task<ActionResult<Usuario>> GetUsuarioCPF(string cpf)
+        //{
+        //    var usuario = await _context.Usuarios.FindAsync(cpf);
 
-            if (usuario == null)
-            {
-                return NotFound();
-            }
+        //    if (usuario == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return usuario;
-        }
+        //    return usuario;
+        //}
 
         // PUT: api/Usuarios/5
         [HttpPut("{id}")]
