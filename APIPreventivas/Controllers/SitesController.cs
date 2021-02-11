@@ -9,7 +9,7 @@ using APIPreventivas.Models;
 
 namespace APIPreventivas.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/sites")]
     [ApiController]
     public class SitesController : ControllerBase
     {
@@ -29,7 +29,7 @@ namespace APIPreventivas.Controllers
 
         // GET: api/Sites/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Site>> GetSite(string id)
+        public async Task<ActionResult<Site>> GetSite(int id)
         {
             var site = await _context.Sites.FindAsync(id);
 
@@ -41,65 +41,63 @@ namespace APIPreventivas.Controllers
             return site;
         }
 
-        // GET: api/Sites/MGPSO_0001
-        [HttpGet("{endId}")]
-        public async Task<ActionResult<Site>> GetSiteByEndId(string endId)
-        {
-            var site = await _context.Sites.FindAsync(endId);
+        //// GET: api/Sites/MGPSO_0001
+        //[HttpGet("{endId}")]
+        //public async Task<ActionResult<Site>> GetSiteByEndId(string endId)
+        //{
+        //    var site = await _context.Sites.FindAsync(endId);
 
-            if (site == null)
-            {
-                return NotFound();
-            }
+        //    if (site == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return site;
-        }
+        //    return site;
+        //}
 
-        // GET: api/Sites/PSVG14
-        [HttpGet("{endId}")]
-        public async Task<ActionResult<Site>> GetSiteBySiteGsm(string nomeGsm)
-        {
-            var site = await _context.Sites.FindAsync(nomeGsm);
+        //// GET: api/Sites/PSVG14
+        //[HttpGet("{nomeGsm}")]
+        //public async Task<ActionResult<Site>> GetSiteBySiteGsm(string nomeGsm)
+        //{
+        //    var site = await _context.Sites.FindAsync(nomeGsm);
 
-            if (site == null)
-            {
-                return NotFound();
-            }
+        //    if (site == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return site;
-        }
+        //    return site;
+        //}
 
-        // GET: api/Sites/MG5014
-        [HttpGet("{endId}")]
-        public async Task<ActionResult<Site>> GetSiteBySiteWcdma(string nomeWcdma)
-        {
-            var site = await _context.Sites.FindAsync(nomeWcdma);
+        //// GET: api/Sites/MG5014
+        //[HttpGet("{nomeWcdma}")]
+        //public async Task<ActionResult<Site>> GetSiteBySiteWcdma(string nomeWcdma)
+        //{
+        //    var site = await _context.Sites.FindAsync(nomeWcdma);
 
-            if (site == null)
-            {
-                return NotFound();
-            }
+        //    if (site == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return site;
-        }
+        //    return site;
+        //}
 
-        // GET: api/Sites/Passos
-        [HttpGet("{endId}")]
-        public async Task<ActionResult<Site>> GetSiteByCidade(string cidade)
-        {
-            var site = await _context.Sites.FindAsync(cidade);
+        //// GET: api/Sites/Passos
+        //[HttpGet("{cidade}")]
+        //public async Task<ActionResult<Site>> GetSiteByCidade(string cidade)
+        //{
+        //    var site = await _context.Sites.FindAsync(cidade);
 
-            if (site == null)
-            {
-                return NotFound();
-            }
+        //    if (site == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return site;
-        }
+        //    return site;
+        //}
 
         // PUT: api/Sites/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSite(string id, Site site)
         {
@@ -130,8 +128,6 @@ namespace APIPreventivas.Controllers
         }
 
         // POST: api/Sites
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Site>> PostSite(Site site)
         {

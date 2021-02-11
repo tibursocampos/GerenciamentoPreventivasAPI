@@ -1,4 +1,5 @@
-﻿using System;
+﻿using APIPreventivas.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,7 +10,8 @@ using static APIPreventivas.Domain.Enum.EstadoBrEnum;
 namespace APIPreventivas.Models
 {
     public class Site
-    {                
+    {   
+        public int IdSite { get; set; }
         public string EndId { get; set; }
         public string SiteGsm { get; set; }
         public string Site3g { get; set; }
@@ -17,6 +19,7 @@ namespace APIPreventivas.Models
         public string Cidade { get; set; }
         public EstadoBR Estado { get; set; }
         public ANFMG ANF { get; set; }
-        public virtual Alvo Alvos { get; set; }
+        public  ICollection<AlvoSite> AlvosSites { get; set; }
+        //public virtual ICollection<Alvo> Alvoss { get; set; }
     }
 }

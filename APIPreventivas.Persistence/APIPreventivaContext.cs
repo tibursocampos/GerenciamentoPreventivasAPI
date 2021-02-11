@@ -25,6 +25,7 @@ namespace APIPreventivas.Models
         public DbSet<Cronograma> Cronogramas { get; set; }
         public DbSet<Site> Sites { get; set; }
         public DbSet<Alvo> Alvos { get; set; }
+        public DbSet<AlvoSite> AlvosSites { get; set; }
         public DbSet<Atividade> Atividades { get; set; }
         
         
@@ -42,12 +43,24 @@ namespace APIPreventivas.Models
                 .HasForeignKey(c => c.IdSupervisor);
 
             modelBuilder.Entity<Site>()
-                .HasKey(s => s.EndId);
+                .HasKey(s => s.IdSite);
 
             modelBuilder.Entity<Site>()
-                .HasOne(a => a.Alvos)
-                .WithOne(s => s.Sites)
-                .HasForeignKey<Alvo>(a => a.IdSite);
+                .Property(c => c.IdSite)
+                .UseIdentityColumn();
+
+            modelBuilder.Entity<AlvoSite>()
+                .HasKey(x => new { x.IdAlvo, x.IdSite });
+
+            modelBuilder.Entity<AlvoSite>()
+                .HasOne(a => a.Alvo)
+                .WithMany(s => s.AlvosSites)
+                .HasForeignKey(a => a.IdAlvo);
+
+            modelBuilder.Entity<AlvoSite>()
+                .HasOne(a => a.Site)
+                .WithMany(s => s.AlvosSites)
+                .HasForeignKey(a => a.IdSite);
 
             modelBuilder.Entity<Alvo>()
                 .HasKey(a => a.IdAlvo); 

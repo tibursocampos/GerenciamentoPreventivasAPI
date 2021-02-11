@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIPreventivas.Models;
+using APIPreventivas.Service;
 
 namespace APIPreventivas.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/cronogramas")]
     [ApiController]
     public class CronogramasController : ControllerBase
     {
@@ -30,9 +31,9 @@ namespace APIPreventivas.Controllers
         // GET: api/Cronogramas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cronograma>> GetCronograma(int id)
-        {
+        {            
             var cronograma = await _context.Cronogramas.FindAsync(id);
-
+            
             if (cronograma == null)
             {
                 return NotFound();
@@ -41,38 +42,21 @@ namespace APIPreventivas.Controllers
             return cronograma;
         }
 
-        // GET: api/Cronogramas/mes
-        [HttpGet("{mes}")]
-        public async Task<ActionResult<Cronograma>> GetCronogramaByMes(int mes)
+        //// GET: api/Cronogramas/detalhes/2
+        [HttpGet("detalhes/{id}")]
+        public async Task<ActionResult<object>> GetCronogramaDetalhes(int id)
         {
-            var cronograma = await _context.Cronogramas.FindAsync(mes);
+            var cronogramaDetalhe = await CronogramaService.GetAlvosDetalhados(id);
 
-            if (cronograma == null)
+            if (cronogramaDetalhe == null)
             {
                 return NotFound();
             }
 
-            return cronograma;
+            return cronogramaDetalhe;
         }
 
-        // GET: api/Cronogramas/ano
-        [HttpGet("{ano}")]
-        public async Task<ActionResult<Cronograma>> GetCronogramaByYear(int year)
-        {
-            var cronograma = await _context.Cronogramas.FindAsync(year);
-
-            if (cronograma == null)
-            {
-                return NotFound();
-            }
-
-            return cronograma;
-        }
-
-        
         // PUT: api/Cronogramas/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCronograma(int id, Cronograma cronograma)
         {
@@ -86,6 +70,7 @@ namespace APIPreventivas.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                CronogramaService.AlteraStatusCronograma(cronograma);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,8 +88,6 @@ namespace APIPreventivas.Controllers
         }
 
         // POST: api/Cronogramas
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Cronograma>> PostCronograma(Cronograma cronograma)
         {

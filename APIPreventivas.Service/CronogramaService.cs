@@ -5,6 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using static APIPreventivas.Domain.Enum.MesesEnum;
+using APIPreventivas.Service;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using APIPreventivas.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections;
 
 namespace APIPreventivas.Service
 {
@@ -30,6 +36,52 @@ namespace APIPreventivas.Service
                                select cronog.IdCronograma;
 
             return idCronogramaBusca.First();
+        }
+
+        //Altera cronograma para concluído
+        static public Cronograma AlteraStatusCronograma(Cronograma cronograma)
+        {
+            if (cronograma.Concluido == false)
+            {
+                bool todosConcluidos = true;
+                var cronogramaAlvos = AlvoService.ListaAlvosCronograma(cronograma);                
+                foreach (var alvos in cronogramaAlvos)
+                { 
+                    if (alvos.Concluido == false)
+                    {
+                        todosConcluidos = false;
+                    }                
+                }
+                if (todosConcluidos == true)
+                {
+                    cronograma.Concluido = true;
+                }
+            }
+            db.Cronogramas.Add(cronograma);
+            db.SaveChangesAsync();
+            return cronograma;
+        }        
+        static public async Task<object> GetAlvosDetalhados(int id)
+        {
+
+            var alvosCronograma = from alvos in db.Alvos
+                                  join sites in db.Sites on alvos.IdSite equals sites.IdSite
+                                  join atividades in db.Atividades on alvos.IdAlvo equals atividades.IdAlvo
+                                  where alvos.IdCronograma == id
+                                  select new
+                                  {
+                                      sites.EndId,
+                                      sites.SiteGsm,
+                                      atividades.TipoAtividade,
+                                      atividades.DataProgramacao,
+                                      atividades.DataConclusao,
+                                      alvos.Concluido
+                                  };
+
+            object detalhes = await alvosCronograma.ToListAsync();
+            var novo = detalhes;
+            
+            return novo;
         }
     }
 }

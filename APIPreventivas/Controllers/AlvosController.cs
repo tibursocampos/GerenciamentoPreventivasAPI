@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIPreventivas.Models;
+using APIPreventivas.Service;
+using APIPreventivas.Domain.Models;
+using static APIPreventivas.Domain.Enum.TipoAtividadeEnum;
 
 namespace APIPreventivas.Controllers
 {
@@ -41,23 +44,21 @@ namespace APIPreventivas.Controllers
             return alvo;
         }
 
-        // GET: api/Alvos/MGPSO_0001
-        [HttpGet("{endId}")]
-        public async Task<ActionResult<Alvo>> GetAlvoEndId(string EndId)
-        {
-            var alvo = await _context.Alvos.FindAsync(EndId);
+        //// GET: api/Alvos/MGPSO_0001
+        //[HttpGet("{endId}")]
+        //public async Task<ActionResult<Alvo>> GetAlvoEndId(string EndId)
+        //{
+        //    var alvo = await _context.Alvos.FindAsync(EndId);
 
-            if (alvo == null)
-            {
-                return NotFound();
-            }
+        //    if (alvo == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return alvo;
-        }
+        //    return alvo;
+        //}
 
         // PUT: api/Alvos/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAlvo(int id, Alvo alvo)
         {
@@ -66,7 +67,7 @@ namespace APIPreventivas.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(alvo).State = EntityState.Modified;
+            _context.Entry(alvo).State = EntityState.Modified;            
 
             try
             {
@@ -88,14 +89,32 @@ namespace APIPreventivas.Controllers
         }
 
         // POST: api/Alvos
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Alvo>> PostAlvo(Alvo alvo)
         {
-            _context.Alvos.Add(alvo);
-            await _context.SaveChangesAsync();
+            alvo.Atividades = new List<Atividade>();
+            List<Atividade> list = new List<Atividade>();
 
+            Atividade um = new Atividade(TipoAtividade.Aterramento);
+            list.Add(um);
+            Atividade dois = new Atividade(TipoAtividade.Baterias);
+            list.Add(dois);
+            Atividade tres = new Atividade(TipoAtividade.Infraestrutura);
+            list.Add(tres);
+            Atividade quatro = new Atividade(TipoAtividade.Acesso);
+            list.Add(quatro);
+            Atividade cinco = new Atividade(TipoAtividade.MW);
+            list.Add(cinco);
+            
+            foreach(var lista in list)
+            {
+                alvo.Atividades.Add(lista);
+            }                       
+            
+            _context.Alvos.Add(alvo);      
+            await _context.SaveChangesAsync();            
+            AlvoService.relacionaAlvoSite(alvo);
+            
             return CreatedAtAction("GetAlvo", new { id = alvo.IdAlvo }, alvo);
         }
 
