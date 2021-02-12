@@ -24,7 +24,7 @@ namespace APIPreventivas.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-            return await _context.Usuarios.ToListAsync();
+            return await _context.Usuarios.OrderBy(u => u.PrimeiroNome).ToListAsync();
         }
 
         // GET: api/Usuarios/5
