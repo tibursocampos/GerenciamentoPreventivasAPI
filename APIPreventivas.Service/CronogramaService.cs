@@ -72,6 +72,7 @@ namespace APIPreventivas.Service
                                   {
                                       sites.EndId,
                                       sites.SiteGsm,
+                                      sites.Site3g,
                                       atividades.TipoAtividade,
                                       atividades.DataProgramacao,
                                       atividades.DataConclusao,

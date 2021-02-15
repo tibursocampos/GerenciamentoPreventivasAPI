@@ -44,6 +44,34 @@ namespace APIPreventivas.Controllers
             return alvo;
         }
 
+        // GET: api/Alvos/busca?idCronograma=2
+        [HttpGet("busca")]
+        public async Task<ActionResult<IEnumerable<Alvo>>> GetAlvoCronograma(int idCronograma)
+        {
+            var alvo = await _context.Alvos.Where(a => a.IdCronograma == idCronograma).ToListAsync();
+
+            if (alvo == null)
+            {
+                return NotFound();
+            }
+
+            return alvo;
+        }
+
+        // GET: api/Alvos/alvosAdd
+        [HttpGet("alvosAdd/{id}")]
+        public async Task<ActionResult<object>> GetAlvosTelaAdd(int id)
+        {
+            var cronogramaDetalhe = await AlvoService.GetAlvosTelaAdd(id);
+
+            if (cronogramaDetalhe == null)
+            {
+                return NotFound();
+            }
+
+            return cronogramaDetalhe;
+        }
+
         //// GET: api/Alvos/MGPSO_0001
         //[HttpGet("{endId}")]
         //public async Task<ActionResult<Alvo>> GetAlvoEndId(string EndId)

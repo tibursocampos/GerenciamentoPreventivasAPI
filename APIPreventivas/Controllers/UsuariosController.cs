@@ -9,7 +9,7 @@ using APIPreventivas.Models;
 
 namespace APIPreventivas.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/usuarios")]
     [ApiController]
     public class UsuariosController : ControllerBase
     {
@@ -20,11 +20,11 @@ namespace APIPreventivas.Controllers
             _context = context;
         }
 
-        // GET: api/Usuarios
-        [HttpGet]
+        //GET: api/Usuarios
+       [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
-            return await _context.Usuarios.ToListAsync();
+            return await _context.Usuarios.OrderBy(u => u.PrimeiroNome).ToListAsync();
         }
 
         // GET: api/Usuarios/5
@@ -41,19 +41,28 @@ namespace APIPreventivas.Controllers
             return usuario;
         }
 
-        //// GET: api/Usuarios/12345678999
-        //[HttpGet("{cpf}")]
-        //public async Task<ActionResult<Usuario>> GetUsuarioCPF(string cpf)
-        //{
-        //    var usuario = await _context.Usuarios.FindAsync(cpf);
+        [HttpGet("busca")]
+        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarioNome(string nome)
+        {
+            var usuario = await _context.Usuarios.Where(u => u.PrimeiroNome == nome).ToListAsync();
+            if (usuario == null)
+            {
+                return NotFound(new { mensagem = "Usuário não encontrado !!! " });
+            }
+            return usuario;
+        }
 
-        //    if (usuario == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return usuario;
-        //}
+        [HttpGet("supervisores")]
+        public async Task<ActionResult<IEnumerable<Usuario>>> GetSupervisores()
+        {
+            var usuario = await _context.Usuarios.Where(u => u.Permissao == Domain.Enum.TipoUsuarioEnum.TipoUsuario.supervisor)
+                                                        .ToListAsync();
+            if (usuario == null)
+            {
+                return NotFound(new { mensagem = "Usuário não encontrado !!! " });
+            }
+            return usuario;
+        }
 
         // PUT: api/Usuarios/5
         [HttpPut("{id}")]

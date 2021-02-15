@@ -24,7 +24,7 @@ namespace APIPreventivas.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Site>>> GetSites()
         {
-            return await _context.Sites.ToListAsync();
+            return await _context.Sites.OrderBy(s => s.Cidade).ToListAsync();
         }
 
         // GET: api/Sites/5
