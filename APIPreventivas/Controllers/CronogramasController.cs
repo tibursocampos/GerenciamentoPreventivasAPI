@@ -42,6 +42,34 @@ namespace APIPreventivas.Controllers
             return cronograma;
         }
 
+        //GET: api/Cronogramas/1
+        //[HttpGet("busca")]
+        //public async Task<ActionResult<Cronograma>> GetCronogramaMes(int mes)
+        //{
+        //    var cronograma = await _context.Cronogramas.FindAsync(mes);
+
+        //    if (cronograma == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return cronograma;
+
+        //    IQueryable<Cronograma> consulta = _context.Cronogramas;
+
+        //    if (!string.IsNullOrEmpty(mes))
+        //    {
+        //        consulta = consulta.Where(e => e.Mes.Contains(mes));
+        //    }
+
+        //    if (consulta == null)
+        //    {
+        //        return NotFound(new { mensagem = "Usuário não encontrado !!!" });
+        //    }
+
+        //    return await consulta.ToListAsync();
+        //}
+
         //// GET: api/Cronogramas/detalhes/2
         [HttpGet("detalhes/{id}")]
         public async Task<ActionResult<object>> GetCronogramaDetalhes(int id)
