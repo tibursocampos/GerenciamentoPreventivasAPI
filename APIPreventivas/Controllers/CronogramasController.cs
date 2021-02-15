@@ -43,34 +43,34 @@ namespace APIPreventivas.Controllers
         }
 
         //GET: api/Cronogramas/1
-        //[HttpGet("busca")]
-        //public async Task<ActionResult<Cronograma>> GetCronogramaMes(int mes)
-        //{
-        //    var cronograma = await _context.Cronogramas.FindAsync(mes);
+        [HttpGet("busca")]
+        public async Task<ActionResult<IEnumerable<Cronograma>>> GetCronogramaMes(int mes)
+        {
+            var cronograma = await _context.Cronogramas.Where(c => (int)c.Mes == mes).ToListAsync();
 
-        //    if (cronograma == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (cronograma == null)
+            {
+                return NotFound();
+            }
 
-        //    return cronograma;
+            return cronograma;
 
-        //    IQueryable<Cronograma> consulta = _context.Cronogramas;
+            //    IQueryable<Cronograma> consulta = _context.Cronogramas;
 
-        //    if (!string.IsNullOrEmpty(mes))
-        //    {
-        //        consulta = consulta.Where(e => e.Mes.Contains(mes));
-        //    }
+            //    if (!string.IsNullOrEmpty(mes))
+            //    {
+            //        consulta = consulta.Where(e => e.Mes.Contains(mes));
+            //    }
 
-        //    if (consulta == null)
-        //    {
-        //        return NotFound(new { mensagem = "Usuário não encontrado !!!" });
-        //    }
+            //    if (consulta == null)
+            //    {
+            //        return NotFound(new { mensagem = "Usuário não encontrado !!!" });
+            //    }
 
-        //    return await consulta.ToListAsync();
-        //}
+            //    return await consulta.ToListAsync();
+         }
 
-        //// GET: api/Cronogramas/detalhes/2
+        // GET: api/Cronogramas/detalhes/2
         [HttpGet("detalhes/{id}")]
         public async Task<ActionResult<object>> GetCronogramaDetalhes(int id)
         {

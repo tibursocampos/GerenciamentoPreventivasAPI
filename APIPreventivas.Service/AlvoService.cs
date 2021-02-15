@@ -7,6 +7,7 @@ using static APIPreventivas.Domain.Enum.TipoAtividadeEnum;
 using APIPreventivas.Domain.Models;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIPreventivas.Service
 {
@@ -35,6 +36,27 @@ namespace APIPreventivas.Service
             db.SaveChangesAsync();
 
             return novoRelacionamento;
+        }
+
+        static public async Task<object> GetAlvosTelaAdd(int id)
+        {
+
+            var alvosCronograma = from alvos in db.Alvos
+                                  join sites in db.Sites on alvos.IdSite equals sites.IdSite
+                                  where alvos.IdCronograma == id
+                                  select new
+                                  {
+                                      sites.EndId,
+                                      sites.SiteGsm,
+                                      sites.Site3g,                                      
+                                      alvos.Concluido,
+                                      alvos.DataConclusao
+                                  };
+
+            object detalhes = await alvosCronograma.ToListAsync();
+            var novo = detalhes;
+
+            return novo;
         }
     }
 }
