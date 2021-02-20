@@ -40,12 +40,14 @@ namespace APIPreventivas.Service
 
         static public async Task<object> GetAlvosTelaAdd(int id)
         {
+            object detalhes;
 
             var alvosCronograma = from alvos in db.Alvos
                                   join sites in db.Sites on alvos.IdSite equals sites.IdSite
                                   where alvos.IdCronograma == id
                                   select new
                                   {
+                                      alvos.IdAlvo,
                                       sites.EndId,
                                       sites.SiteGsm,
                                       sites.Site3g,                                      
@@ -53,10 +55,7 @@ namespace APIPreventivas.Service
                                       alvos.DataConclusao
                                   };
 
-            object detalhes = await alvosCronograma.ToListAsync();
-            var novo = detalhes;
-
-            return novo;
+            return detalhes = await alvosCronograma.ToListAsync();            
         }
     }
 }

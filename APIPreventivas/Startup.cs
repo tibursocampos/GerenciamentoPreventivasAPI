@@ -23,16 +23,17 @@ namespace APIPreventivas
             var connection = Configuration["ConnectionString:DefaultConnection"];
             services.AddDbContext<APIPreventivaContext>(options =>
             options.UseSqlServer(connection));
-            services.AddControllers();
 
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
-                .AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader());
-                //.AllowCredentials());
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials());
             });
+
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,11 +44,13 @@ namespace APIPreventivas
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseRouting();
+
             app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
