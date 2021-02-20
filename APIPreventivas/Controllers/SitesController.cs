@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIPreventivas.Models;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace APIPreventivas.Controllers
 {
@@ -41,19 +42,19 @@ namespace APIPreventivas.Controllers
             return site;
         }
 
-        //// GET: api/Sites/MGPSO_0001
-        //[HttpGet("{endId}")]
-        //public async Task<ActionResult<Site>> GetSiteByEndId(string endId)
-        //{
-        //    var site = await _context.Sites.FindAsync(endId);
+        // GET: api/Sites/MGPSO_0001
+        [HttpGet("busca")]
+        public async Task<ActionResult<IEnumerable<Site>>> GetSiteByEndId(string endId)
+        {
+            var site = await _context.Sites.Where(e => e.EndId.Contains(endId)).ToListAsync();
 
-        //    if (site == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (site == null)
+            {
+                return NotFound(new { mensagem = "Site não encontrado !!!" });
+            }
 
-        //    return site;
-        //}
+            return site;
+        }
 
         //// GET: api/Sites/PSVG14
         //[HttpGet("{nomeGsm}")]

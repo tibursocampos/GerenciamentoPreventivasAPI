@@ -9,6 +9,7 @@ using APIPreventivas.Models;
 using APIPreventivas.Service;
 using APIPreventivas.Domain.Models;
 using static APIPreventivas.Domain.Enum.TipoAtividadeEnum;
+using Microsoft.AspNetCore.Cors;
 
 namespace APIPreventivas.Controllers
 {
@@ -117,6 +118,7 @@ namespace APIPreventivas.Controllers
         }
 
         // POST: api/Alvos
+        [EnableCors]
         [HttpPost]
         public async Task<ActionResult<Alvo>> PostAlvo(Alvo alvo)
         {
