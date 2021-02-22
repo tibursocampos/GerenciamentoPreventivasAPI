@@ -70,20 +70,19 @@ namespace APIPreventivas.Service
             int cronoAtual = 0;
 
             if (atividade.DataConclusao.HasValue)
-                {               
-                    var atividadesAlvo = from atividades in db.Atividades
-                                         where atividades.IdAlvo == atividade.IdAlvo
-                                         select atividades;
-                    foreach (var verificaAtividades in atividadesAlvo)
+            {
+                var atividadesAlvo = await db.Atividades.Where(a => a.IdAlvo == atividade.IdAlvo).ToListAsync();
+            
+                foreach (var verificaAtividades in atividadesAlvo)
+                {
+                    if (verificaAtividades.DataConclusao.HasValue)
                     {
-                        if (verificaAtividades.DataConclusao.HasValue)
-                        {
-                            contAtividades++;
-                        }
+                        contAtividades++;
                     }
                 }
+            }
 
-            var alvo = db.Alvos.Where(a => a.IdAlvo == atividade.IdAlvo).ToListAsync();
+            var alvo = await db.Alvos.Where(a => a.IdAlvo == atividade.IdAlvo).ToListAsync();
 
             var cronogramaAtual = from alvos in db.Alvos
                                   join crono in db.Cronogramas on alvos.IdCronograma equals crono.IdCronograma
@@ -92,23 +91,24 @@ namespace APIPreventivas.Service
 
             if (contAtividades == 5)
             {
-                foreach (var alteraAlvo in await alvo)
+                foreach (var alteraAlvo in alvo)
                 {
                     alteraAlvo.Concluido = true;
                     alteraAlvo.DataConclusao = atividade.DataConclusao;
                     db.Alvos.Update(alteraAlvo);
                 }
 
-                foreach (var crono in cronogramaAtual)
+                foreach (var crono in await cronogramaAtual.ToListAsync())
                 {
                     cronoAtual = crono.IdCronograma;
                 }
 
-                var alvosCronograma = from alvos in db.Alvos
-                                      where alvos.IdCronograma == cronoAtual
-                                      select alvos;
+                var alvosCronograma = await db.Alvos.Where(a => a.IdCronograma == cronoAtual).ToListAsync();
+                //var alvosCronograma = from alvos in db.Alvos
+                //                      where alvos.IdCronograma == cronoAtual
+                //                      select alvos;
 
-                foreach (var alteraCrono in await alvosCronograma.ToListAsync())
+                foreach (var alteraCrono in alvosCronograma)
                 {
                     contAlvos++;
                     if (alteraCrono.Concluido)
@@ -130,7 +130,7 @@ namespace APIPreventivas.Service
             }
             else
             {
-                foreach (var alteraAlvo in await alvo)
+                foreach (var alteraAlvo in alvo)
                 {
                     alteraAlvo.Concluido = false;
                     alteraAlvo.DataConclusao = null;
