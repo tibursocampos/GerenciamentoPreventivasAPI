@@ -44,7 +44,7 @@ namespace APIPreventivas.Controllers
         [HttpGet("busca")]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarioNome(string nome)
         {
-            var usuario = await _context.Usuarios.Where(u => u.PrimeiroNome == nome).ToListAsync();
+            var usuario = await _context.Usuarios.Where(u => u.PrimeiroNome.Contains(nome)).ToListAsync();
             if (usuario == null)
             {
                 return NotFound(new { mensagem = "Usuário não encontrado !!! " });
