@@ -47,7 +47,7 @@ namespace APIPreventivas.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAtividade(int id, Atividade atividade)
         {
-            IActionResult retorno;
+            //IActionResult retorno;
             if (id != atividade.IdAtividade)
             {
                 return BadRequest();
@@ -58,7 +58,7 @@ namespace APIPreventivas.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                retorno = await AtividadeService.AlteraStatusAlvo(atividade);
+                await AtividadeService.AlteraStatusAlvo(atividade);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -72,7 +72,7 @@ namespace APIPreventivas.Controllers
                 }
             }
 
-            return retorno;
+            return NoContent();
         }
 
         // POST: api/Atividades

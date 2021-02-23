@@ -62,15 +62,17 @@ namespace APIPreventivas.Service
         }
 
         //atualiza status da atividade, alvo e cronograma para concluído caso todas atividades e alvos estejam concluídos
-        static public async Task<IActionResult> AlteraStatusAlvo(Atividade atividade)
+        static public async Task AlteraStatusAlvo(Atividade atividade)
         {
             int contAtividades = 0;
             int contAlvos = 0;
             int contAlvosConcl = 0;
             int cronoAtual = 0;
 
+            //se a atividade possui valor no campo data conclusão
             if (atividade.DataConclusao.HasValue)
             {
+                //retorna as atividades relacionadas ao alvo (sempre um total de 5 atividades)
                 var atividadesAlvo = await db.Atividades.Where(a => a.IdAlvo == atividade.IdAlvo).ToListAsync();
             
                 foreach (var verificaAtividades in atividadesAlvo)
@@ -82,12 +84,20 @@ namespace APIPreventivas.Service
                 }
             }
 
+            //retorna o alvo que a atividade está relacionada
             var alvo = await db.Alvos.Where(a => a.IdAlvo == atividade.IdAlvo).ToListAsync();
 
-            var cronogramaAtual = from alvos in db.Alvos
-                                  join crono in db.Cronogramas on alvos.IdCronograma equals crono.IdCronograma
-                                  where alvos.IdAlvo == atividade.IdAlvo
-                                  select crono;
+            //retorna o cronograma que o alvo está relacionado
+            //var cronogramaAtual = from alvos in db.Alvos
+            //                      join crono in db.Cronogramas on alvos.IdCronograma equals crono.IdCronograma
+            //                      where alvos.IdAlvo == atividade.IdAlvo
+            //                      select crono;
+            var cronogramaAtual = await db.Alvos.Join(db.Cronogramas,
+                                        a => a.IdCronograma,
+                                        c => c.IdCronograma,
+                                        (a, c) => new { a, c })
+                                        .Where(al => al.a.IdAlvo == atividade.IdAlvo)
+                                        .Select(i => i.c).ToListAsync();
 
             if (contAtividades == 5)
             {
@@ -98,15 +108,13 @@ namespace APIPreventivas.Service
                     db.Alvos.Update(alteraAlvo);
                 }
 
-                foreach (var crono in await cronogramaAtual.ToListAsync())
+                foreach (var crono in cronogramaAtual)
                 {
                     cronoAtual = crono.IdCronograma;
                 }
 
+                //retorna todos os alvos relacionados ao cronograma
                 var alvosCronograma = await db.Alvos.Where(a => a.IdCronograma == cronoAtual).ToListAsync();
-                //var alvosCronograma = from alvos in db.Alvos
-                //                      where alvos.IdCronograma == cronoAtual
-                //                      select alvos;
 
                 foreach (var alteraCrono in alvosCronograma)
                 {
@@ -119,7 +127,7 @@ namespace APIPreventivas.Service
 
                 if(contAlvos == contAlvosConcl)
                 {
-                    foreach (var alteraCrono in await cronogramaAtual.ToListAsync())
+                    foreach (var alteraCrono in cronogramaAtual)
                     {
                         alteraCrono.Concluido = true;
                         alteraCrono.DataConclusao = atividade.DataConclusao;
@@ -137,7 +145,7 @@ namespace APIPreventivas.Service
                     db.Alvos.Update(alteraAlvo);
                 }
 
-                foreach (var alteraCrono in await cronogramaAtual.ToListAsync())
+                foreach (var alteraCrono in cronogramaAtual)
                 {
                     alteraCrono.Concluido = false;
                     alteraCrono.DataConclusao = null;
@@ -146,7 +154,7 @@ namespace APIPreventivas.Service
             }
 
             await db.SaveChangesAsync();
-            return (IActionResult)alvo;
+            //return (IActionResult)alvo;
         }
     }
 }
