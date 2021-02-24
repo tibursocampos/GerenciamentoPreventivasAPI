@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using APIPreventivas.Models;
+using APIPreventivas.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using APIPreventivas.Models;
-using APIPreventivas.Service;
+using System.Collections.Generic;
 
 namespace APIPreventivas.Controllers
 {
@@ -14,25 +10,24 @@ namespace APIPreventivas.Controllers
     [ApiController]
     public class CronogramasController : ControllerBase
     {
-        private readonly APIPreventivaContext _context;
-
-        public CronogramasController(APIPreventivaContext context)
+        private ICronogramaService cronogramaService;
+        public CronogramasController(ICronogramaService cronogramaService)
         {
-            _context = context;
+            this.cronogramaService = cronogramaService;
         }
 
         // GET: api/Cronogramas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cronograma>>> GetCronogramas()
+        public List<Cronograma> GetCronogramas()
         {
-            return await _context.Cronogramas.ToListAsync();
+            return cronogramaService.GetCronogramas();
         }
 
         // GET: api/Cronogramas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cronograma>> GetCronograma(int id)
-        {            
-            var cronograma = await _context.Cronogramas.FindAsync(id);
+        public ActionResult<Cronograma> GetCronograma(int id)
+        {
+            var cronograma = cronogramaService.GetCronograma(id);
             
             if (cronograma == null)
             {
@@ -44,9 +39,9 @@ namespace APIPreventivas.Controllers
 
         //GET: api/Cronogramas/1
         [HttpGet("busca")]
-        public async Task<ActionResult<IEnumerable<Cronograma>>> GetCronogramaMes(int mes)
+        public ActionResult<List<Cronograma>> GetCronogramaMes(int mes)
         {
-            var cronograma = await _context.Cronogramas.Where(c => (int)c.Mes == mes).ToListAsync();
+            var cronograma = cronogramaService.GetCronogramaMes(mes);
 
             if (cronograma == null)
             {
@@ -55,26 +50,13 @@ namespace APIPreventivas.Controllers
 
             return cronograma;
 
-            //    IQueryable<Cronograma> consulta = _context.Cronogramas;
-
-            //    if (!string.IsNullOrEmpty(mes))
-            //    {
-            //        consulta = consulta.Where(e => e.Mes.Contains(mes));
-            //    }
-
-            //    if (consulta == null)
-            //    {
-            //        return NotFound(new { mensagem = "Usuário não encontrado !!!" });
-            //    }
-
-            //    return await consulta.ToListAsync();
          }
 
         // GET: api/Cronogramas/detalhes/2
         [HttpGet("detalhes/{id}")]
-        public async Task<ActionResult<object>> GetCronogramaDetalhes(int id)
+        public ActionResult<object> GetCronogramaDetalhes(int id)
         {
-            var cronogramaDetalhe = await CronogramaService.GetAlvosDetalhados(id);
+            var cronogramaDetalhe = cronogramaService.GetAlvosDetalhados(id);
 
             if (cronogramaDetalhe == null)
             {
@@ -86,19 +68,16 @@ namespace APIPreventivas.Controllers
 
         // PUT: api/Cronogramas/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCronograma(int id, Cronograma cronograma)
+        public ActionResult PutCronograma(int id, Cronograma cronograma)
         {
             if (id != cronograma.IdCronograma)
             {
                 return BadRequest();
-            }
-
-            _context.Entry(cronograma).State = EntityState.Modified;
+            }            
 
             try
             {
-                await _context.SaveChangesAsync();
-                CronogramaService.AlteraStatusCronograma(cronograma);
+                cronogramaService.AlteraStatusCronograma(cronograma);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -117,33 +96,29 @@ namespace APIPreventivas.Controllers
 
         // POST: api/Cronogramas
         [HttpPost]
-        public async Task<ActionResult<Cronograma>> PostCronograma(Cronograma cronograma)
+        public ActionResult<Cronograma> PostCronograma(Cronograma cronograma)
         {
-            _context.Cronogramas.Add(cronograma);
-            await _context.SaveChangesAsync();
+            var cronogramaCriado = cronogramaService.PostCronograma(cronograma);
 
-            return CreatedAtAction("GetCronograma", new { id = cronograma.IdCronograma }, cronograma);
+            return CreatedAtAction("GetCronograma", new { id = cronogramaCriado.IdCronograma }, cronogramaCriado);
         }
 
         // DELETE: api/Cronogramas/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Cronograma>> DeleteCronograma(int id)
+        public ActionResult<Cronograma> DeleteCronograma(int id)
         {
-            var cronograma = await _context.Cronogramas.FindAsync(id);
+            var cronograma = cronogramaService.DeleteCronograma(id);
             if (cronograma == null)
             {
                 return NotFound();
             }
 
-            _context.Cronogramas.Remove(cronograma);
-            await _context.SaveChangesAsync();
-
             return cronograma;
         }
 
-        private bool CronogramaExists(int id)
+        public bool CronogramaExists(int id)
         {
-            return _context.Cronogramas.Any(e => e.IdCronograma == id);
+            return cronogramaService.CronogramaExists(id);
         }
     }
 }

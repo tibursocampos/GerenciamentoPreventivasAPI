@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using APIPreventivas.Domain.Models;
+using APIPreventivas.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using APIPreventivas.Domain.Models;
-using APIPreventivas.Models;
-using APIPreventivas.Service;
+using System.Collections.Generic;
 
 namespace APIPreventivas.Controllers
 {
@@ -15,25 +10,27 @@ namespace APIPreventivas.Controllers
     [ApiController]
     public class AtividadesController : ControllerBase
     {
-        private readonly APIPreventivaContext _context;
+        private IAtividadeService atividadeService;
 
-        public AtividadesController(APIPreventivaContext context)
+        public AtividadesController(IAtividadeService atividadeService)
         {
-            _context = context;
+            this.atividadeService = atividadeService;
         }
 
         // GET: api/Atividades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Atividade>>> GetAtividades()
+        //public async Task<ActionResult<IEnumerable<Atividade>>> GetAtividades()
+        public List<Atividade> GetAtividades()
         {
-            return await _context.Atividades.ToListAsync();
+            return atividadeService.GetAtividades();
         }
 
         // GET: api/Atividades/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Atividade>> GetAtividade(int id)
+        //public async Task<ActionResult<Atividade>> GetAtividade(int id)
+        public ActionResult<Atividade> GetAtividade(int id)
         {
-            var atividade = await _context.Atividades.FindAsync(id);
+            var atividade = atividadeService.GetAtividade(id);
 
             if (atividade == null)
             {
@@ -45,20 +42,17 @@ namespace APIPreventivas.Controllers
 
         // PUT: api/Atividades/5        
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAtividade(int id, Atividade atividade)
+        public ActionResult PutAtividade(int id, Atividade atividade)
         {
-            //IActionResult retorno;
             if (id != atividade.IdAtividade)
             {
                 return BadRequest();
             }
 
-            _context.Entry(atividade).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
-                await AtividadeService.AlteraStatusAlvo(atividade);
+                atividadeService.AlteraStatusAlvo(atividade);              
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -77,33 +71,29 @@ namespace APIPreventivas.Controllers
 
         // POST: api/Atividades
         [HttpPost]
-        public async Task<ActionResult<Atividade>> PostAtividade(Atividade atividade)
+        public ActionResult<Atividade> PostAtividade(Atividade atividade)
         {
-            _context.Atividades.Add(atividade);
-            await _context.SaveChangesAsync();
+            var atividadeCriada = atividadeService.PostAtividade(atividade);
 
-            return CreatedAtAction("GetAtividade", new { id = atividade.IdAtividade }, atividade);
+            return CreatedAtAction("GetAtividade", new { id = atividadeCriada.IdAtividade }, atividadeCriada);
         }
 
         // DELETE: api/Atividades/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Atividade>> DeleteAtividade(int id)
+        public ActionResult<Atividade> DeleteAtividade(int id)
         {
-            var atividade = await _context.Atividades.FindAsync(id);
+            var atividade = atividadeService.DeleteAtividade(id);
             if (atividade == null)
             {
                 return NotFound();
-            }
-
-            _context.Atividades.Remove(atividade);
-            await _context.SaveChangesAsync();
+            }           
 
             return atividade;
         }
 
         private bool AtividadeExists(int id)
         {
-            return _context.Atividades.Any(e => e.IdAtividade == id);
+            return atividadeService.AtividadeExists(id);
         }
     }
 }
