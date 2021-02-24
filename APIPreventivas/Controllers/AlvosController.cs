@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using APIPreventivas.Domain.Models;
+using APIPreventivas.Service;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using APIPreventivas.Models;
-using APIPreventivas.Service;
-using APIPreventivas.Domain.Models;
-using static APIPreventivas.Domain.Enum.TipoAtividadeEnum;
-using Microsoft.AspNetCore.Cors;
+using System.Collections.Generic;
 
 namespace APIPreventivas.Controllers
 {
@@ -17,25 +11,25 @@ namespace APIPreventivas.Controllers
     [ApiController]
     public class AlvosController : ControllerBase
     {
-        private readonly APIPreventivaContext _context;
+        private IAlvoService alvoService;
 
-        public AlvosController(APIPreventivaContext context)
+        public AlvosController(IAlvoService alvoService)
         {
-            _context = context;
+            this.alvoService = alvoService;
         }
 
         // GET: api/Alvos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Alvo>>> GetAlvos()
+        public List<Alvo> GetAlvos()
         {
-            return await _context.Alvos.ToListAsync();
+            return alvoService.getAlvos();
         }
 
         // GET: api/Alvos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Alvo>> GetAlvo(int id)
+        public ActionResult<Alvo> GetAlvo(int id)
         {
-            var alvo = await _context.Alvos.FindAsync(id);
+            var alvo = alvoService.getAlvo(id);
 
             if (alvo == null)
             {
@@ -47,9 +41,9 @@ namespace APIPreventivas.Controllers
 
         // GET: api/Alvos/busca?idCronograma=2
         [HttpGet("busca")]
-        public async Task<ActionResult<IEnumerable<Alvo>>> GetAlvoCronograma(int idCronograma)
+        public ActionResult<List<Alvo>> GetAlvoCronograma(int idCronograma)
         {
-            var alvo = await _context.Alvos.Where(a => a.IdCronograma == idCronograma).ToListAsync();
+            var alvo = alvoService.GetAlvoCronograma(idCronograma);
 
             if (alvo == null)
             {
@@ -61,9 +55,9 @@ namespace APIPreventivas.Controllers
 
         // GET: api/Alvos/alvosAdd
         [HttpGet("alvosAdd/{id}")]
-        public async Task<ActionResult<object>> GetAlvosTelaAdd(int id)
+        public ActionResult<object> GetAlvosTelaAdd(int id)
         {
-            var cronogramaDetalhe = await AlvoService.GetAlvosTelaAdd(id);
+            var cronogramaDetalhe = alvoService.GetAlvosTelaAdd(id);
 
             if (cronogramaDetalhe == null)
             {
@@ -73,34 +67,18 @@ namespace APIPreventivas.Controllers
             return cronogramaDetalhe;
         }
 
-        //// GET: api/Alvos/MGPSO_0001
-        //[HttpGet("{endId}")]
-        //public async Task<ActionResult<Alvo>> GetAlvoEndId(string EndId)
-        //{
-        //    var alvo = await _context.Alvos.FindAsync(EndId);
-
-        //    if (alvo == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return alvo;
-        //}
-
         // PUT: api/Alvos/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAlvo(int id, Alvo alvo)
+        public ActionResult PutAlvo(int id, Alvo alvo)
         {
             if (id != alvo.IdAlvo)
             {
                 return BadRequest();
-            }
-
-            _context.Entry(alvo).State = EntityState.Modified;            
+            }                     
 
             try
             {
-                await _context.SaveChangesAsync();
+                alvoService.PutAlvo(alvo);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -120,53 +98,29 @@ namespace APIPreventivas.Controllers
         // POST: api/Alvos
         [EnableCors]
         [HttpPost]
-        public async Task<ActionResult<Alvo>> PostAlvo(Alvo alvo)
+        public ActionResult<Alvo> PostAlvo(Alvo alvo)
         {
-            alvo.Atividades = new List<Atividade>();
-            List<Atividade> list = new List<Atividade>();
-
-            Atividade um = new Atividade(TipoAtividade.Aterramento);
-            list.Add(um);
-            Atividade dois = new Atividade(TipoAtividade.Baterias);
-            list.Add(dois);
-            Atividade tres = new Atividade(TipoAtividade.Infraestrutura);
-            list.Add(tres);
-            Atividade quatro = new Atividade(TipoAtividade.Acesso);
-            list.Add(quatro);
-            Atividade cinco = new Atividade(TipoAtividade.MW);
-            list.Add(cinco);
+            var alvoCriado = alvoService.PostAlvo(alvo);
             
-            foreach(var lista in list)
-            {
-                alvo.Atividades.Add(lista);
-            }                       
-            
-            _context.Alvos.Add(alvo);      
-            await _context.SaveChangesAsync();            
-            AlvoService.relacionaAlvoSite(alvo);
-            
-            return CreatedAtAction("GetAlvo", new { id = alvo.IdAlvo }, alvo);
+            return CreatedAtAction("GetAlvo", new { id = alvoCriado.IdAlvo }, alvoCriado);
         }
 
         // DELETE: api/Alvos/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Alvo>> DeleteAlvo(int id)
+        public ActionResult<Alvo> DeleteAlvo(int id)
         {
-            var alvo = await _context.Alvos.FindAsync(id);
+            var alvo = alvoService.DeleteAlvo(id);
             if (alvo == null)
             {
                 return NotFound();
             }
-
-            _context.Alvos.Remove(alvo);
-            await _context.SaveChangesAsync();
 
             return alvo;
         }
 
         private bool AlvoExists(int id)
         {
-            return _context.Alvos.Any(e => e.IdAlvo == id);
+            return alvoService.AlvoExists(id);
         }
     }
 }

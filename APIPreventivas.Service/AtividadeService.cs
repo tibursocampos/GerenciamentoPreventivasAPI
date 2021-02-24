@@ -1,33 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using APIPreventivas.Domain.Models;
 using APIPreventivas.Models;
-using APIPreventivas.Domain.Models;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace APIPreventivas.Service
 {
-    public class AtividadeService
+    public interface IAtividadeService
+    {       
+        List<Atividade> AtividadesProgramadasHoje();
+        List<Atividade> AtividadesConcluidas(Cronograma cronograma);
+        void AlteraStatusAlvo(Atividade atividade);
+        List<Atividade> AtividadesProgramadasHoje(Cronograma cronograma);
+        List<Atividade> GetAtividades();
+        Atividade GetAtividade(int idAtividade);
+        bool AtividadeExists(int id);
+        Atividade DeleteAtividade(int id);
+        Atividade PostAtividade(Atividade atividade);
+    }
+    public class AtividadeService : IAtividadeService
     {
-        static private readonly APIPreventivaContext db = new APIPreventivaContext();
+        private readonly APIPreventivaContext db;
+        public AtividadeService(APIPreventivaContext context)
+        {
+            db = context;
+        }
+        
+        public List<Atividade> GetAtividades()
+        {
+            return db.Atividades.ToList();
+        }
 
-        //static public List<Atividade> AtividadesProgramadasHoje(Cronograma cronograma)
-        //{
-        //    var alvos = AlvoService.ListaAlvosCronograma(cronograma);
-        //    var atividadesProgramadas = from alvo in alvos
-        //                                join atividade in db.Atividades
-        //                                on alvo.IdAlvo equals atividade.IdAlvo
-        //                                where atividade.DataProgramacao == DateTime.Now.Date
-        //                                select atividade;
-        //    return atividadesProgramadas.ToList();
+        public Atividade GetAtividade(int idAtividade)
+        {
+            var atividade = db.Atividades.Find(idAtividade);
+            return atividade;
+        }
 
-        //}
+        public bool AtividadeExists(int id)
+        {
+            return db.Atividades.Any(e => e.IdAtividade == id);
+        }
+
+        public Atividade PostAtividade(Atividade atividade)
+        {
+            db.Atividades.Add(atividade);
+            db.SaveChanges();
+
+            return atividade;
+        }
+
+        public Atividade DeleteAtividade(int id)
+        {
+            var atividade = db.Atividades.Find(id);            
+
+            db.Atividades.Remove(atividade);
+            db.SaveChanges();
+
+            return atividade;
+        }
+
+        public List<Atividade> AtividadesProgramadasHoje(Cronograma cronograma)
+        {
+            var alvos = db.Alvos.Where(a => a.IdCronograma == cronograma.IdCronograma).ToList();
+            var atividadesProgramadas = from alvo in alvos
+                                        join atividade in db.Atividades
+                                        on alvo.IdAlvo equals atividade.IdAlvo
+                                        where atividade.DataProgramacao == DateTime.Now.Date
+                                        select atividade;
+            return atividadesProgramadas.ToList();
+
+        }
 
         //retorna uma lista de objeto Atividade. Possui as atividades programadas para o dia.
-        static public List<Atividade> AtividadesProgramadasHoje()
+        public List<Atividade> AtividadesProgramadasHoje()
         {            
             var atividadesProgramadas = from atividade in db.Atividades
                                         where atividade.DataProgramacao == DateTime.Now.Date
@@ -37,9 +85,9 @@ namespace APIPreventivas.Service
         }
 
         // retorna uma lista de objeto Atividade. Possui as atividades já concluídas dentro do cronograma informado.
-        static public List<Atividade> AtividadesConcluidas(Cronograma cronograma)
+        public List<Atividade> AtividadesConcluidas(Cronograma cronograma)
         {
-            var alvos = AlvoService.ListaAlvosCronograma(cronograma);
+            var alvos = db.Alvos.Where(a => a.IdCronograma == cronograma.IdCronograma).ToList();
             var atividadesConcluidas = from atividade in db.Atividades
                                        join alvo in alvos
                                        on atividade.IdAlvo equals alvo.IdAlvo
@@ -49,9 +97,9 @@ namespace APIPreventivas.Service
             return atividadesConcluidas.ToList();
         }
 
-        static public IEnumerable<Atividade> AtividadesConcluidasIEnumerable(Cronograma cronograma)
+        public IEnumerable<Atividade> AtividadesConcluidasIEnumerable(Cronograma cronograma)
         {
-            var alvos = AlvoService.ListaAlvosCronograma(cronograma);
+            var alvos = db.Alvos.Where(a => a.IdCronograma == cronograma.IdCronograma).ToList();
             var atividadesConcluidas = (IEnumerable<Atividade>) from atividade in db.Atividades
                                        join alvo in alvos
                                        on atividade.IdAlvo equals alvo.IdAlvo
@@ -62,16 +110,19 @@ namespace APIPreventivas.Service
         }
 
         //atualiza status da atividade, alvo e cronograma para concluído caso todas atividades e alvos estejam concluídos
-        static public async Task<IActionResult> AlteraStatusAlvo(Atividade atividade)
+        public void AlteraStatusAlvo (Atividade atividade)
         {
             int contAtividades = 0;
             int contAlvos = 0;
             int contAlvosConcl = 0;
             int cronoAtual = 0;
+            db.Entry(atividade).State = EntityState.Modified;
 
+            //se a atividade possui valor no campo data conclusão
             if (atividade.DataConclusao.HasValue)
             {
-                var atividadesAlvo = await db.Atividades.Where(a => a.IdAlvo == atividade.IdAlvo).ToListAsync();
+                //retorna as atividades relacionadas ao alvo (sempre um total de 5 atividades)
+                var atividadesAlvo = db.Atividades.Where(a => a.IdAlvo == atividade.IdAlvo).ToList();
             
                 foreach (var verificaAtividades in atividadesAlvo)
                 {
@@ -82,12 +133,15 @@ namespace APIPreventivas.Service
                 }
             }
 
-            var alvo = await db.Alvos.Where(a => a.IdAlvo == atividade.IdAlvo).ToListAsync();
+            //retorna o alvo que a atividade está relacionada
+            var alvo = db.Alvos.Where(a => a.IdAlvo == atividade.IdAlvo).ToList();
 
-            var cronogramaAtual = from alvos in db.Alvos
-                                  join crono in db.Cronogramas on alvos.IdCronograma equals crono.IdCronograma
-                                  where alvos.IdAlvo == atividade.IdAlvo
-                                  select crono;
+            var cronogramaAtual = db.Alvos.Join(db.Cronogramas,
+                                        a => a.IdCronograma,
+                                        c => c.IdCronograma,
+                                        (a, c) => new { a, c })
+                                        .Where(al => al.a.IdAlvo == atividade.IdAlvo)
+                                        .Select(i => i.c).ToList();
 
             if (contAtividades == 5)
             {
@@ -98,15 +152,13 @@ namespace APIPreventivas.Service
                     db.Alvos.Update(alteraAlvo);
                 }
 
-                foreach (var crono in await cronogramaAtual.ToListAsync())
+                foreach (var crono in cronogramaAtual)
                 {
                     cronoAtual = crono.IdCronograma;
                 }
 
-                var alvosCronograma = await db.Alvos.Where(a => a.IdCronograma == cronoAtual).ToListAsync();
-                //var alvosCronograma = from alvos in db.Alvos
-                //                      where alvos.IdCronograma == cronoAtual
-                //                      select alvos;
+                //retorna todos os alvos relacionados ao cronograma
+                var alvosCronograma = db.Alvos.Where(a => a.IdCronograma == cronoAtual).ToList();
 
                 foreach (var alteraCrono in alvosCronograma)
                 {
@@ -119,7 +171,7 @@ namespace APIPreventivas.Service
 
                 if(contAlvos == contAlvosConcl)
                 {
-                    foreach (var alteraCrono in await cronogramaAtual.ToListAsync())
+                    foreach (var alteraCrono in cronogramaAtual)
                     {
                         alteraCrono.Concluido = true;
                         alteraCrono.DataConclusao = atividade.DataConclusao;
@@ -137,16 +189,16 @@ namespace APIPreventivas.Service
                     db.Alvos.Update(alteraAlvo);
                 }
 
-                foreach (var alteraCrono in await cronogramaAtual.ToListAsync())
+                foreach (var alteraCrono in cronogramaAtual)
                 {
                     alteraCrono.Concluido = false;
                     alteraCrono.DataConclusao = null;
                     db.Cronogramas.Update(alteraCrono);
                 }
-            }
-
-            await db.SaveChangesAsync();
-            return (IActionResult)alvo;
+            }                        
+            
+            db.SaveChanges();
+            //return (IActionResult)alvo;
         }
     }
 }

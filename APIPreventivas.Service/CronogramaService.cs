@@ -1,25 +1,74 @@
-﻿using APIPreventivas.Domain.Enum;
-using APIPreventivas.Models;
-using System.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using static APIPreventivas.Domain.Enum.MesesEnum;
-using APIPreventivas.Service;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using APIPreventivas.Domain.Models;
+﻿using APIPreventivas.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using static APIPreventivas.Domain.Enum.MesesEnum;
 
 namespace APIPreventivas.Service
 {
-    public class CronogramaService
+    public interface ICronogramaService
     {
-        static private readonly APIPreventivaContext db = new APIPreventivaContext();
-        
+        List<Cronograma> GetCronogramas();
+        Cronograma GetCronograma(int idCronograma);
+        List<Cronograma> GetCronogramaMes(int mes);
+        Cronograma PostCronograma(Cronograma cronograma);
+        Cronograma DeleteCronograma(int idCronograma);
+        bool CronogramaExists(int id);
+        int RetornaIdCronograma(Meses mes, int ano);
+        int RetornaIdCronograma(Cronograma cronograma);
+        void AlteraStatusCronograma(Cronograma cronograma);
+        object GetAlvosDetalhados(int id);
+
+    }
+    public class CronogramaService : ICronogramaService
+    {        
+        private readonly APIPreventivaContext db;
+        public CronogramaService(APIPreventivaContext context)
+        {
+            db = context;
+        }
+
+        public List<Cronograma> GetCronogramas()
+        {
+            return db.Cronogramas.ToList();
+        }
+
+        public Cronograma GetCronograma(int idCronograma)
+        {
+            var cronograma = db.Cronogramas.Find(idCronograma);
+            return cronograma;
+        }
+
+        public List<Cronograma> GetCronogramaMes(int mes)
+        {
+            var cronograma = db.Cronogramas.Where(c => (int)c.Mes == mes).ToList();
+            return cronograma;
+        }
+
+        public Cronograma PostCronograma(Cronograma cronograma)
+        {
+            db.Cronogramas.Add(cronograma);
+            db.SaveChanges();
+
+            return cronograma;
+        }
+
+        public Cronograma DeleteCronograma(int idCronograma)
+        {
+            var cronograma = db.Cronogramas.Find(idCronograma);
+            db.Cronogramas.Remove(cronograma);
+            db.SaveChanges();
+
+            return cronograma;
+        }
+
+        public bool CronogramaExists(int id)
+        {
+            return db.Cronogramas.Any(e => e.IdCronograma == id);
+        }
+
         //Retorna o ID do Cronograma passando um Enum para o mes e Int para ano
-        static public int RetornaIdCronograma (Meses mes, int ano)
+        public int RetornaIdCronograma (Meses mes, int ano)
         {
             var idCronogramaBusca = from cronograma in db.Cronogramas
                                where cronograma.Mes == mes && cronograma.Ano == ano
@@ -29,7 +78,7 @@ namespace APIPreventivas.Service
         }
 
         //Retorna o ID do Cronograma passando um objeto Cronograma
-        static public int RetornaIdCronograma(Cronograma cronograma)
+        public int RetornaIdCronograma(Cronograma cronograma)
         {
             var idCronogramaBusca = from cronog in db.Cronogramas
                                where cronog.IdCronograma == cronograma.IdCronograma
@@ -39,12 +88,14 @@ namespace APIPreventivas.Service
         }
 
         //Altera cronograma para concluído
-        static public Cronograma AlteraStatusCronograma(Cronograma cronograma)
+        public void AlteraStatusCronograma(Cronograma cronograma)
         {
+            db.Entry(cronograma).State = EntityState.Modified;
+
             if (cronograma.Concluido == false)
             {
                 bool todosConcluidos = true;
-                var cronogramaAlvos = AlvoService.ListaAlvosCronograma(cronograma);                
+                var cronogramaAlvos = db.Alvos.Where(a => a.IdCronograma == cronograma.IdCronograma).ToList();
                 foreach (var alvos in cronogramaAlvos)
                 { 
                     if (alvos.Concluido == false)
@@ -58,10 +109,11 @@ namespace APIPreventivas.Service
                 }
             }
             db.Cronogramas.Add(cronograma);
-            db.SaveChangesAsync();
-            return cronograma;
+            db.SaveChanges();
         }        
-        static public async Task<object> GetAlvosDetalhados(int id)
+
+        //gera a view para tela cronograma detalhado
+        public object GetAlvosDetalhados(int id)
         {
 
             var alvosCronograma = from alvos in db.Alvos
@@ -81,7 +133,7 @@ namespace APIPreventivas.Service
                                       alvos.Concluido
                                   };
 
-            object detalhes = await alvosCronograma.ToListAsync();
+            object detalhes = alvosCronograma.ToList();
             var novo = detalhes;
             
             return novo;

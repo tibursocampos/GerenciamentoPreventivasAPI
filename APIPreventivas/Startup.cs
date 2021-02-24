@@ -1,4 +1,5 @@
 using APIPreventivas.Models;
+using APIPreventivas.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,10 @@ namespace APIPreventivas
             var connection = Configuration["ConnectionString:DefaultConnection"];
             services.AddDbContext<APIPreventivaContext>(options =>
             options.UseSqlServer(connection));
+
+            services.AddTransient<IAtividadeService, AtividadeService>();
+            services.AddTransient<ICronogramaService, CronogramaService>();
+            services.AddTransient<IAlvoService, AlvoService>();
 
             services.AddCors(options =>
             {
