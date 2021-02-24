@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using APIPreventivas.Models;
+using APIPreventivas.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using APIPreventivas.Models;
-using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using System.Collections.Generic;
 
 namespace APIPreventivas.Controllers
 {
@@ -14,25 +10,25 @@ namespace APIPreventivas.Controllers
     [ApiController]
     public class SitesController : ControllerBase
     {
-        private readonly APIPreventivaContext _context;
+        private readonly ISiteService siteService;
 
-        public SitesController(APIPreventivaContext context)
+        public SitesController(ISiteService siteService)
         {
-            _context = context;
+            this.siteService = siteService;
         }
 
         // GET: api/Sites
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Site>>> GetSites()
+        public List<Site> GetSites()
         {
-            return await _context.Sites.OrderBy(s => s.Cidade).ToListAsync();
+            return siteService.GetSites();
         }
 
         // GET: api/Sites/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Site>> GetSite(int id)
+        public ActionResult<Site> GetSite(int id)
         {
-            var site = await _context.Sites.FindAsync(id);
+            var site = siteService.GetSite(id);
 
             if (site == null)
             {
@@ -44,9 +40,9 @@ namespace APIPreventivas.Controllers
 
         // GET: api/Sites/MGPSO_0001
         [HttpGet("busca")]
-        public async Task<ActionResult<IEnumerable<Site>>> GetSiteByEndId(string endId)
+        public ActionResult<List<Site>> GetSiteByEndId(string endId)
         {
-            var site = await _context.Sites.Where(e => e.EndId.Contains(endId)).ToListAsync();
+            var site = siteService.GetSiteByEndId(endId);
 
             if (site == null)
             {
@@ -56,62 +52,18 @@ namespace APIPreventivas.Controllers
             return site;
         }
 
-        //// GET: api/Sites/PSVG14
-        //[HttpGet("{nomeGsm}")]
-        //public async Task<ActionResult<Site>> GetSiteBySiteGsm(string nomeGsm)
-        //{
-        //    var site = await _context.Sites.FindAsync(nomeGsm);
-
-        //    if (site == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return site;
-        //}
-
-        //// GET: api/Sites/MG5014
-        //[HttpGet("{nomeWcdma}")]
-        //public async Task<ActionResult<Site>> GetSiteBySiteWcdma(string nomeWcdma)
-        //{
-        //    var site = await _context.Sites.FindAsync(nomeWcdma);
-
-        //    if (site == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return site;
-        //}
-
-        //// GET: api/Sites/Passos
-        //[HttpGet("{cidade}")]
-        //public async Task<ActionResult<Site>> GetSiteByCidade(string cidade)
-        //{
-        //    var site = await _context.Sites.FindAsync(cidade);
-
-        //    if (site == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return site;
-        //}
-
         // PUT: api/Sites/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSite(int id, Site site)
+        public ActionResult PutSite(int id, Site site)
         {
             if (id != site.IdSite)
             {
                 return BadRequest();
             }
 
-            _context.Entry(site).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                siteService.PutSite(site);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -130,47 +82,29 @@ namespace APIPreventivas.Controllers
 
         // POST: api/Sites
         [HttpPost]
-        public async Task<ActionResult<Site>> PostSite(Site site)
+        public ActionResult<Site> PostSite(Site site)
         {
-            _context.Sites.Add(site);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (SiteExists(site.IdSite))
-                {
-                    return Conflict(new { mensagem = "Site já existe !!!" });
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var alvoCriado = siteService.PostSite(site);
 
-            return CreatedAtAction("GetSite", new { id = site.IdSite }, site);
+            return CreatedAtAction("GetSite", new { id = alvoCriado.IdSite }, alvoCriado);
         }
 
         // DELETE: api/Sites/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Site>> DeleteSite(int id)
+        public ActionResult<Site> DeleteSite(int id)
         {
-            var site = await _context.Sites.FindAsync(id);
+            var site = siteService.DeleteSite(id);
             if (site == null)
             {
                 return NotFound();
             }
-
-            _context.Sites.Remove(site);
-            await _context.SaveChangesAsync();
 
             return site;
         }
 
         private bool SiteExists(int id)
         {
-            return _context.Sites.Any(e => e.IdSite == id);
+            return siteService.SiteExists(id);
         }
     }
 }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using APIPreventivas.Models;
+using APIPreventivas.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using APIPreventivas.Models;
+using System.Collections.Generic;
 
 namespace APIPreventivas.Controllers
 {
@@ -13,25 +10,25 @@ namespace APIPreventivas.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly APIPreventivaContext _context;
+        private IUsuarioService usuarioService;
 
-        public UsuariosController(APIPreventivaContext context)
+        public UsuariosController(IUsuarioService usuarioService)
         {
-            _context = context;
+            this.usuarioService = usuarioService;
         }
 
         //GET: api/Usuarios
        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        public List<Usuario> GetUsuarios()
         {
-            return await _context.Usuarios.OrderBy(u => u.PrimeiroNome).ToListAsync();
+            return usuarioService.GetUsuarios();
         }
 
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUsuario(int id)
+        public ActionResult<Usuario> GetUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var usuario = usuarioService.GetUsuario(id);
 
             if (usuario == null)
             {
@@ -42,9 +39,9 @@ namespace APIPreventivas.Controllers
         }
 
         [HttpGet("busca")]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarioNome(string nome)
+        public ActionResult<List<Usuario>> GetUsuarioNome(string nome)
         {
-            var usuario = await _context.Usuarios.Where(u => u.PrimeiroNome.Contains(nome)).ToListAsync();
+            var usuario = usuarioService.GetUsuarioNome(nome);
             if (usuario == null)
             {
                 return NotFound(new { mensagem = "Usuário não encontrado !!! " });
@@ -53,31 +50,28 @@ namespace APIPreventivas.Controllers
         }
 
         [HttpGet("supervisores")]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetSupervisores()
+        public ActionResult<List<Usuario>> GetSupervisores()
         {
-            var usuario = await _context.Usuarios.Where(u => u.Permissao == Domain.Enum.TipoUsuarioEnum.TipoUsuario.supervisor)
-                                                        .ToListAsync();
+            var usuario = usuarioService.GetSupervisores();
             if (usuario == null)
             {
-                return NotFound(new { mensagem = "Usuário não encontrado !!! " });
+                return NotFound(new { mensagem = "Supervisor não encontrado !!! " });
             }
             return usuario;
         }
 
         // PUT: api/Usuarios/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        public ActionResult PutUsuario(int id, Usuario usuario)
         {
             if (id != usuario.IdUsuario)
             {
                 return BadRequest();
             }
 
-            _context.Entry(usuario).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                usuarioService.PutUsuario(usuario);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -96,33 +90,29 @@ namespace APIPreventivas.Controllers
 
         // POST: api/Usuarios
         [HttpPost]
-        public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
+        public ActionResult<Usuario> PostUsuario(Usuario usuario)
         {
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
+            var usuarioCriado = usuarioService.PostUsuario(usuario);
 
-            return CreatedAtAction("GetUsuario", new { id = usuario.IdUsuario }, usuario);
+            return CreatedAtAction("GetUsuario", new { id = usuarioCriado.IdUsuario }, usuarioCriado);
         }
 
         // DELETE: api/Usuarios/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Usuario>> DeleteUsuario(int id)
+        public ActionResult<Usuario> DeleteUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
+            var usuario = usuarioService.DeleteUsuario(id);
             if (usuario == null)
             {
                 return NotFound();
             }
-
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
 
             return usuario;
         }
 
         private bool UsuarioExists(int id)
         {
-            return _context.Usuarios.Any(e => e.IdUsuario == id);
+            return usuarioService.UsuarioExists(id);
         }
     }
 }

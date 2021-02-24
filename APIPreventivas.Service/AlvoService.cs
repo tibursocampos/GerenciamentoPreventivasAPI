@@ -81,7 +81,7 @@ namespace APIPreventivas.Service
         public void PutAlvo(Alvo alvo)
         {
             db.Entry(alvo).State = EntityState.Modified;
-            db.SaveChangesAsync();
+            db.SaveChanges();
         }
 
         public Alvo DeleteAlvo(int idAlvo)
