@@ -28,6 +28,8 @@ namespace APIPreventivas
             services.AddTransient<IAtividadeService, AtividadeService>();
             services.AddTransient<ICronogramaService, CronogramaService>();
             services.AddTransient<IAlvoService, AlvoService>();
+            services.AddTransient<ISiteService, SiteService>();
+            services.AddTransient<IUsuarioService, UsuarioService>();
 
             services.AddCors(options =>
             {
