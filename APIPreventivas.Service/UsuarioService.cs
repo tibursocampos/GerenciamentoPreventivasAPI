@@ -9,6 +9,7 @@ namespace APIPreventivas.Service
     {
         List<Usuario> GetUsuarios();
         List<Usuario> GetSupervisores();
+        List<Usuario> GetTecnicos();
         Usuario GetUsuario(int idUsuario);
         List<Usuario> GetUsuarioNome(string nome);
         Usuario PostUsuario(Usuario usuario);
@@ -26,12 +27,17 @@ namespace APIPreventivas.Service
 
         public List<Usuario> GetUsuarios()
         {
-            return db.Usuarios.ToList();
+            return db.Usuarios.OrderBy(u => u.PrimeiroNome).ToList();
         }
 
         public List<Usuario> GetSupervisores()
         {
             return db.Usuarios.Where(u => u.Permissao == Domain.Enum.TipoUsuarioEnum.TipoUsuario.supervisor).ToList();
+        }
+
+        public List<Usuario> GetTecnicos()
+        {
+            return db.Usuarios.Where(u => u.Permissao == Domain.Enum.TipoUsuarioEnum.TipoUsuario.tecnico).ToList();
         }
 
         public Usuario GetUsuario(int idUsuario)
