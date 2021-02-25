@@ -21,8 +21,10 @@ namespace APIPreventivas.Service
         Alvo DeleteAlvo(int idCronograma);
         bool AlvoExists(int id);
         List<Alvo> ListaAlvosCronograma(Cronograma cronograma);
+        Array ListaAlvoConcluidos(int idCronograma);
+        Array ListaAlvoRestantes(int idCronograma);
         AlvoSite RelacionaAlvoSite(Alvo alvo);
-        Task<object> GetAlvosTelaAdd(int id);
+        Array GetAlvosTelaAdd(int id);
     }
     public class AlvoService :IAlvoService
     {
@@ -105,7 +107,19 @@ namespace APIPreventivas.Service
                                     select alvos;
 
             return alvosDoCronograma.ToList();
-        }    
+        }
+
+        public Array ListaAlvoConcluidos(int idCronograma)
+        {
+            var alvo = db.Alvos.Where(a => a.IdCronograma == idCronograma && a.Concluido == true).ToArray();
+            return alvo;
+        }
+        
+        public Array ListaAlvoRestantes(int idCronograma)
+        {
+            var alvo = db.Alvos.Where(a => a.IdCronograma == idCronograma && a.Concluido == false).ToArray();
+            return alvo;
+        }
 
         //relacionar alvo com site
         public AlvoSite RelacionaAlvoSite(Alvo alvo)
@@ -121,10 +135,8 @@ namespace APIPreventivas.Service
             return novoRelacionamento;
         }
 
-        public async Task<object> GetAlvosTelaAdd(int id)
-        {
-            object detalhes;
-
+        public Array GetAlvosTelaAdd(int id)
+        {          
             var alvosCronograma = from alvos in db.Alvos
                                   join sites in db.Sites on alvos.IdSite equals sites.IdSite
                                   where alvos.IdCronograma == id
@@ -138,7 +150,7 @@ namespace APIPreventivas.Service
                                       alvos.DataConclusao
                                   };
 
-            return detalhes = await alvosCronograma.ToListAsync();            
+            return alvosCronograma.ToArray();            
         }
     }
 }

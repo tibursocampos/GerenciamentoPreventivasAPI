@@ -60,6 +60,17 @@ namespace APIPreventivas.Controllers
             return usuario;
         }
 
+        [HttpGet("tecnicos")]
+        public ActionResult<List<Usuario>> GetTecnicos()
+        {
+            var usuario = usuarioService.GetTecnicos();
+            if (usuario == null)
+            {
+                return NotFound(new { mensagem = "Técnico não encontrado !!! " });
+            }
+            return usuario;
+        }
+
         // PUT: api/Usuarios/5
         [HttpPut("{id}")]
         public ActionResult PutUsuario(int id, Usuario usuario)

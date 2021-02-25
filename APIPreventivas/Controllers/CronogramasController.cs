@@ -18,7 +18,7 @@ namespace APIPreventivas.Controllers
 
         // GET: api/Cronogramas
         [HttpGet]
-        public List<Cronograma> GetCronogramas()
+        public object GetCronogramas()
         {
             return cronogramaService.GetCronogramas();
         }

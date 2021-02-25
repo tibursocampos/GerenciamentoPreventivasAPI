@@ -1,8 +1,10 @@
 ﻿using APIPreventivas.Domain.Models;
+using APIPreventivas.Models;
 using APIPreventivas.Service;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace APIPreventivas.Controllers
@@ -55,7 +57,7 @@ namespace APIPreventivas.Controllers
 
         // GET: api/Alvos/alvosAdd
         [HttpGet("alvosAdd/{id}")]
-        public ActionResult<object> GetAlvosTelaAdd(int id)
+        public ActionResult<Array> GetAlvosTelaAdd(int id)
         {
             var cronogramaDetalhe = alvoService.GetAlvosTelaAdd(id);
 
@@ -65,6 +67,22 @@ namespace APIPreventivas.Controllers
             }
 
             return cronogramaDetalhe;
+        }
+
+        // GET: api/Alvos/alvosConcluidos
+        [HttpGet("alvosConcluidos/{idCronograma}")]
+        public ActionResult<Array> ListaAlvoConcluidos(int idCronograma)
+        {
+            var alvosConcluidos = alvoService.ListaAlvoConcluidos(idCronograma);
+            return alvosConcluidos;
+        }
+
+        // GET: api/Alvos/alvosRestantes
+        [HttpGet("alvosRestantes/{idCronograma}")]
+        public ActionResult<Array> ListaAlvoRestantes(int idCronograma)
+        {
+            var alvosRestantes = alvoService.ListaAlvoRestantes(idCronograma);
+            return alvosRestantes;
         }
 
         // PUT: api/Alvos/5

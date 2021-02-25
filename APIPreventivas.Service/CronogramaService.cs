@@ -8,7 +8,7 @@ namespace APIPreventivas.Service
 {
     public interface ICronogramaService
     {
-        List<Cronograma> GetCronogramas();
+        object GetCronogramas();
         Cronograma GetCronograma(int idCronograma);
         List<Cronograma> GetCronogramaMes(int mes);
         Cronograma PostCronograma(Cronograma cronograma);
@@ -28,9 +28,23 @@ namespace APIPreventivas.Service
             db = context;
         }
 
-        public List<Cronograma> GetCronogramas()
+        public  object GetCronogramas()
         {
-            return db.Cronogramas.ToList();
+            var cronogramasList = from cronogramas in db.Cronogramas
+                                  join usuarios in db.Usuarios on cronogramas.IdSupervisor equals usuarios.IdUsuario
+                                  select new
+                                  {
+                                      cronogramas.IdCronograma,
+                                      cronogramas.Mes,
+                                      cronogramas.Ano,
+                                      cronogramas.Concluido,
+                                      cronogramas.DataConclusao,
+                                      cronogramas.IdSupervisor,
+                                      usuarios.PrimeiroNome,
+                                      usuarios.ANF
+                                  };
+
+            return cronogramasList.ToList();
         }
 
         public Cronograma GetCronograma(int idCronograma)
