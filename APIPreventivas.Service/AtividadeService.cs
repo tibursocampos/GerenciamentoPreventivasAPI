@@ -11,7 +11,7 @@ namespace APIPreventivas.Service
     public interface IAtividadeService
     {       
         List<Atividade> AtividadesProgramadasHoje();
-        List<Atividade> AtividadesConcluidas(Cronograma cronograma);
+        List<Atividade> AtividadesConcluidas(int idCronograma);
         void AlteraStatusAlvo(Atividade atividade);
         List<Atividade> AtividadesProgramadasHoje(Cronograma cronograma);
         List<Atividade> GetAtividades();
@@ -84,15 +84,15 @@ namespace APIPreventivas.Service
             return atividadesProgramadas.ToList();
         }
 
-        // retorna uma lista de objeto Atividade. Possui as atividades já concluídas dentro do cronograma informado.
-        public List<Atividade> AtividadesConcluidas(Cronograma cronograma)
+        // retorna uma lista de objeto Atividades. Possui as atividades já concluídas dentro do cronograma informado.
+        public List<Atividade> AtividadesConcluidas(int idCronograma)
         {
-            var alvos = db.Alvos.Where(a => a.IdCronograma == cronograma.IdCronograma).ToList();
             var atividadesConcluidas = from atividade in db.Atividades
-                                       join alvo in alvos
-                                       on atividade.IdAlvo equals alvo.IdAlvo
-                                       where atividade.DataConclusao != null
-                                       select atividade;                                      
+                                       join alvo in db.Alvos on atividade.IdAlvo equals alvo.IdAlvo
+                                       join cronograma in db.Cronogramas on alvo.IdCronograma equals cronograma.IdCronograma
+                                       where atividade.DataConclusao != null && cronograma.IdCronograma == idCronograma
+                                       orderby atividade.DataConclusao
+                                       select atividade;
 
             return atividadesConcluidas.ToList();
         }
