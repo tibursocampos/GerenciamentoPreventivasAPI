@@ -40,6 +40,42 @@ namespace APIPreventivas.Controllers
             return atividade;
         }
 
+        // GET: api/Atividades/todas/cronograma?idCronograma=2
+        [HttpGet("todas/cronograma")]
+        public ActionResult<List<Atividade>> GetTodasAtividadesCronograma(int idCronograma)
+        {
+            var atividades = atividadeService.TodasAtividadesCronograma(idCronograma);
+            if (atividades == null)
+            {
+                return NotFound();
+            }
+            return atividades;
+        }
+
+        // GET: api/Atividades/concluidas/cronograma?idCronograma=2
+        [HttpGet("concluidas/cronograma")]
+        public ActionResult<List<Atividade>> GetAtividadesConcluidas(int idCronograma)
+        {
+            var atividades = atividadeService.AtividadesConcluidas(idCronograma);
+            if(atividades == null)
+            {
+                return NotFound();
+            }
+            return atividades;
+        }
+
+        // GET: api/Atividades/programadas/cronograma?idCronograma=2
+        [HttpGet("programadas/cronograma")]
+        public ActionResult<List<Atividade>> GetAtividadesProgramadas(int idCronograma)
+        {
+            var atividades = atividadeService.AtividadesProgramadas(idCronograma);
+            if (atividades == null)
+            {
+                return NotFound();
+            }
+            return atividades;
+        }
+
         // PUT: api/Atividades/5        
         [HttpPut("{id}")]
         public ActionResult PutAtividade(int id, Atividade atividade)
