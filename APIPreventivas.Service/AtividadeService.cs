@@ -11,7 +11,9 @@ namespace APIPreventivas.Service
     public interface IAtividadeService
     {       
         List<Atividade> AtividadesProgramadasHoje();
+        List<Atividade> TodasAtividadesCronograma(int idCronograma);
         List<Atividade> AtividadesConcluidas(int idCronograma);
+        List<Atividade> AtividadesProgramadas(int idCronograma);
         void AlteraStatusAlvo(Atividade atividade);
         List<Atividade> AtividadesProgramadasHoje(Cronograma cronograma);
         List<Atividade> GetAtividades();
@@ -84,7 +86,31 @@ namespace APIPreventivas.Service
             return atividadesProgramadas.ToList();
         }
 
+        public List<Atividade> TodasAtividadesCronograma(int idCronograma)
+        {
+            var atividadesProgramadas = from atividade in db.Atividades
+                                        join alvo in db.Alvos on atividade.IdAlvo equals alvo.IdAlvo
+                                        join cronograma in db.Cronogramas on alvo.IdCronograma equals cronograma.IdCronograma
+                                        where cronograma.IdCronograma == idCronograma
+                                        orderby atividade.IdAtividade
+                                        select atividade;
+
+            return atividadesProgramadas.ToList();
+        }
+
         // retorna uma lista de objeto Atividades. Possui as atividades já concluídas dentro do cronograma informado.
+        public List<Atividade> AtividadesProgramadas(int idCronograma)
+        {
+            var atividadesProgramadas = from atividade in db.Atividades
+                                       join alvo in db.Alvos on atividade.IdAlvo equals alvo.IdAlvo
+                                       join cronograma in db.Cronogramas on alvo.IdCronograma equals cronograma.IdCronograma
+                                       where atividade.DataProgramacao != null && cronograma.IdCronograma == idCronograma
+                                       orderby atividade.DataProgramacao
+                                       select atividade;
+
+            return atividadesProgramadas.ToList();
+        }
+
         public List<Atividade> AtividadesConcluidas(int idCronograma)
         {
             var atividadesConcluidas = from atividade in db.Atividades
