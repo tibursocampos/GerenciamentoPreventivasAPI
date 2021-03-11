@@ -1,13 +1,10 @@
-﻿using APIPreventivas.Models;
+﻿using APIPreventivas.Domain.Models;
+using APIPreventivas.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using static APIPreventivas.Domain.Enum.TipoAtividadeEnum;
-using APIPreventivas.Domain.Models;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace APIPreventivas.Service
 {
@@ -52,6 +49,12 @@ namespace APIPreventivas.Service
             return alvo;
         }
 
+        private List<Alvo> getAlvoCronograma2(Alvo alvo)
+        {
+            var alvos = db.Alvos.Where(a => a.IdCronograma == alvo.IdCronograma).ToList();
+            return alvos;
+        }
+
         public Alvo PostAlvo(Alvo alvo)
         {
             alvo.Atividades = new List<Atividade>();
@@ -71,6 +74,13 @@ namespace APIPreventivas.Service
             foreach (var lista in list)
             {
                 alvo.Atividades.Add(lista);
+            }
+
+            var cronogramaAtual = db.Cronogramas.Where(c => c.IdCronograma == alvo.IdCronograma).ToList();
+
+            foreach (var cronograma in cronogramaAtual)
+            {
+                cronograma.Concluido = false;
             }
 
             db.Alvos.Add(alvo);
