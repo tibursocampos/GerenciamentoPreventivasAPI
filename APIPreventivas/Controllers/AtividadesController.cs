@@ -109,7 +109,7 @@ namespace APIPreventivas.Controllers
         [HttpPost]
         public ActionResult<Atividade> PostAtividade(Atividade atividade)
         {
-            var atividadeCriada = atividadeService.PostAtividade(atividade);
+            var atividadeCriada = atividadeService.PostAtividade(atividade);            
 
             return CreatedAtAction("GetAtividade", new { id = atividadeCriada.IdAtividade }, atividadeCriada);
         }
